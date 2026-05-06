@@ -143,6 +143,32 @@ router.put('/:id', adminMiddleware, async (req, res) => {
       ]
     );
 
+    // --- SINCRONIZAÇÃO DE VARIAÇÕES ---
+    const { variacoes } = req.body;
+    if (variacoes && Array.isArray(variacoes)) {
+      // 1. Desativa todas as variações atuais deste produto
+      await db.query('UPDATE variacoes_produto SET ativo = FALSE WHERE produto_id = $1', [req.params.id]);
+
+      // 2. Processa a lista enviada
+      for (const v of variacoes) {
+        // Se a variação tem um ID real (numérico), nós a reativamos e atualizamos
+        if (v.id && !String(v.id).startsWith('tmp_')) {
+          await db.query(
+            `UPDATE variacoes_produto 
+             SET nome=$1, preco=$2, estoque=$3, ativo=TRUE 
+             WHERE id=$4 AND produto_id=$5`,
+            [v.nome, v.preco, v.estoque || 0, v.id, req.params.id]
+          );
+        } else {
+          // Se não tem ID ou é um ID temporário (tmp_...), criamos uma nova
+          await db.query(
+            'INSERT INTO variacoes_produto (produto_id, nome, preco, estoque, ativo) VALUES ($1, $2, $3, $4, TRUE)',
+            [req.params.id, v.nome, v.preco, v.estoque || 0]
+          );
+        }
+      }
+    }
+
     // Notificações de estoque
     const { emitirEstoqueBaixo, emitirProdutoIndisponivel } = require('../services/notificationService');
     if (Number(estoque) === 0) await emitirProdutoIndisponivel({ id: req.params.id, nome });
