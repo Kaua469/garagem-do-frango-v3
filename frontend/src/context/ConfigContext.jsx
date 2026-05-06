@@ -14,8 +14,8 @@ const ConfigContext = createContext({});
 
 const DEFAULT_CONFIG = {
   nome_loja:     'Garagem do Frango',
-  telefone:      '(16) 99999-9999',
-  whatsapp:      '5516999999999',
+  telefone:      '(16) 99129-7878',
+  whatsapp:      '5516991297878',
   instagram:     'garagemdofrango',
   facebook:      'garagemdofrango',
   endereco:      'Rua das Aves, 123 - Ribeirão Preto, SP',
