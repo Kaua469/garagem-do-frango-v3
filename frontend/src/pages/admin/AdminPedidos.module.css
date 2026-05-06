@@ -1,0 +1,372 @@
+.pageTitle { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 24px; }
+
+/* ── Filtros ── */
+.filtros { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.filtroBtn { padding: 7px 16px; border-radius: 50px; font-size: 0.82rem; font-weight: 700; background: white; border: 2px solid transparent; color: var(--text-secondary); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: all 0.2s; }
+.filtroBtn:hover { border-color: var(--primary); color: var(--primary); }
+.filtroAtivo { background: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
+
+/* ── Cards da lista ── */
+.pedidosList { display: flex; flex-direction: column; gap: 16px; }
+.empty { text-align: center; padding: 60px; color: var(--text-secondary); }
+
+.pedidoCard {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-left: 4px solid transparent;
+  transition: border-color 0.2s;
+}
+.pedidoCard:hover { border-left-color: var(--primary); }
+
+.pedidoTop { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+.pedidoNum  { font-weight: 900; font-size: 1rem; margin-right: 10px; color: var(--text); }
+.pedidoCliente { font-weight: 700; font-size: 0.95rem; margin-right: 10px; }
+.pedidoTel { font-size: 0.82rem; color: var(--text-secondary); }
+.pedidoRight { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.pedidoTotal { font-weight: 900; font-size: 1.1rem; color: var(--primary); }
+.statusBadge { font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+
+.pedidoMid { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 16px; }
+
+.pedidoActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-top: 1px solid #f0e4d4;
+  padding-top: 14px;
+}
+
+.detalhesBtn {
+  background: rgba(49,130,206,0.1);
+  color: #3182ce;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.detalhesBtn:hover { background: rgba(49,130,206,0.2); }
+
+/* ── BOTÃO GERAR NF ── */
+.nfBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #2d6a4f, #40916c);
+  color: white;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(45,106,79,0.25);
+  letter-spacing: 0.02em;
+}
+.nfBtn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.nfBtn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+.nfSpinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.statusBtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.statusBtn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: white;
+  border: 1.5px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.statusBtn:hover { opacity: 0.8; }
+.cancelarBtn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(229,62,62,0.08);
+  color: #e53e3e;
+  border: 1.5px solid #e53e3e;
+  cursor: pointer;
+}
+
+/* ── Modal ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid #f0e4d4;
+  gap: 12px;
+}
+.modalHeader h2 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 700; }
+
+.modalHeaderBtns { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* ── BOTÃO NF NO MODAL ── */
+.nfBtnModal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #2d6a4f, #40916c);
+  color: white;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 3px 10px rgba(45,106,79,0.3);
+  white-space: nowrap;
+}
+.nfBtnModal:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.nfBtnModal:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.closeBtn { background: none; font-size: 1.2rem; cursor: pointer; color: #aaa; padding: 4px; }
+.closeBtn:hover { color: var(--text); }
+
+.modalBody { padding: 24px 28px; display: flex; flex-direction: column; gap: 20px; }
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+  background: #fdf5ee;
+  border-radius: 12px;
+  padding: 18px;
+}
+.fullCol { grid-column: 1 / -1; }
+.infoLabel { display: block; font-size: 0.74rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+.infoVal { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+
+.itensSec { border: 1px solid #f0e4d4; border-radius: 12px; overflow: hidden; }
+.itensTitle { font-weight: 800; font-size: 0.88rem; padding: 12px 16px; background: #fdf5ee; color: var(--primary); border-bottom: 1px solid #f0e4d4; }
+.itensHeader {
+  display: grid;
+  grid-template-columns: 1fr 52px 80px 80px;
+  padding: 8px 16px;
+  background: #f9f0e6;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid #f0e4d4;
+}
+.itemRow {
+  display: grid;
+  grid-template-columns: 1fr 52px 80px 80px;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid #f0e4d4;
+  transition: background 0.1s;
+}
+.itemRow:last-child { border-bottom: none; }
+.itemRow:hover { background: #fdf9f5; }
+.itemRow em { font-style: italic; font-size: 0.8rem; color: var(--text-secondary); }
+.itemCenter { text-align: center; font-weight: 700; }
+.itemRight { text-align: right; color: var(--text-secondary); }
+.itemTotal { text-align: right; font-weight: 800; color: var(--primary); }
+
+.totaisModal { border-top: 2px solid #f0e4d4; padding-top: 4px; }
+.totalRow { display: flex; justify-content: space-between; padding: 8px 4px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px dashed #f0e4d4; }
+.totalRow:last-child { border-bottom: none; }
+.totalFinal { font-weight: 900; font-size: 1.05rem; color: var(--primary); padding-top: 14px; }
+
+@media (max-width: 480px) {
+  .modalHeader { flex-direction: column; }
+  .nfBtnModal { width: 100%; justify-content: center; }
+  .itensHeader, .itemRow { grid-template-columns: 1fr 40px 68px 68px; font-size: 0.78rem; }
+  .infoGrid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════
+   WHATSAPP INTEGRATION STYLES
+═══════════════════════════════════════════════════ */
+
+/* Toast flutuante de notificação WhatsApp */
+.waTostContainer {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9000;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+  border-left: 5px solid #25D366;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  max-width: 360px;
+  width: calc(100vw - 56px);
+}
+
+.waToastIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.waToastBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.waToastTitle {
+  font-weight: 900;
+  font-size: 0.92rem;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+
+.waToastSub {
+  font-size: 0.82rem;
+  color: #666;
+}
+
+.waToastStatus {
+  font-size: 0.78rem;
+  color: #25D366;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.waToastBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.waEnviarBtn {
+  background: #25D366;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  border: none;
+}
+.waEnviarBtn:hover { background: #1ebe5d; }
+
+.waIgnorarBtn {
+  background: #f5f5f5;
+  color: #888;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+}
+.waIgnorarBtn:hover { background: #eee; color: #444; }
+
+/* Botão WhatsApp no modal */
+.waBtnModal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #25D366;
+  color: white;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(37,211,102,0.3);
+}
+.waBtnModal:hover { background: #1ebe5d; transform: translateY(-1px); }
+
+@media (max-width: 480px) {
+  .waTostContainer {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+  }
+  .waBtnModal { padding: 8px 12px; font-size: 0.8rem; }
+  .modalHeaderBtns { flex-wrap: wrap; }
+}
+
+/* ─── CUPOM TÉRMICO ─── */
+.termicaBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #4a1d96, #6d28d9);
+  color: white;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(109,40,217,0.28);
+}
+.termicaBtn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.termicaBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.termicaBtnModal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #4a1d96, #6d28d9);
+  color: white;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 3px 10px rgba(109,40,217,0.3);
+  white-space: nowrap;
+}
+.termicaBtnModal:hover { opacity: 0.88; transform: translateY(-1px); }
+
+@media (max-width: 480px) {
+  .termicaBtnModal { padding: 8px 12px; font-size: 0.8rem; }
+}

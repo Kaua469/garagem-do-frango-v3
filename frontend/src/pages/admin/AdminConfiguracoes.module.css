@@ -1,0 +1,143 @@
+.pageTitle { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 28px; }
+
+.msgBox {
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+  color: #276749;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: start; }
+@media (max-width: 768px) { .layout { grid-template-columns: 1fr; } }
+
+.tabNav {
+  background: white;
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 80px;
+}
+@media (max-width: 768px) { .tabNav { flex-direction: row; flex-wrap: wrap; position: static; } }
+
+.tabBtn {
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  transition: background 0.2s, color 0.2s;
+}
+.tabBtn:hover { background: #fdf5ee; color: var(--primary); }
+.tabActive { background: var(--primary) !important; color: white !important; }
+
+.tabContent {
+  background: white;
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  min-height: 400px;
+}
+@media (max-width: 480px) { .tabContent { padding: 20px; } }
+
+.sectionTitle { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 24px; color: var(--text); }
+.form { display: flex; flex-direction: column; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .row2 { grid-template-columns: 1fr; } }
+
+.notifList { border: 1px solid #f0e4d4; border-radius: 12px; padding: 0 16px; margin-bottom: 24px; }
+
+.alertBox {
+  background: #fffbeb;
+  border: 1px solid #f6d860;
+  color: #92400e;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.alertBox code { background: rgba(0,0,0,0.08); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; }
+
+/* ── Upload Field ── */
+.uploadField {
+  background: #fdf5ee;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px dashed rgba(239,98,3,0.3);
+}
+.uploadLabel {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.uploadPreviewWrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+.uploadPreview {
+  height: 100px;
+  max-width: 280px;
+  border-radius: 10px;
+  object-fit: contain;
+  border: 1px solid rgba(90,43,12,0.12);
+  background: white;
+  display: block;
+}
+.uploadOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(21,9,0,0.55);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.uploadSpinner {
+  width: 24px; height: 24px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.uploadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--primary);
+  color: white;
+  padding: 9px 18px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(239,98,3,0.25);
+}
+.uploadBtn:hover { background: var(--primary-hover); }
+
+.uploadCurrent {
+  margin-top: 10px;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}

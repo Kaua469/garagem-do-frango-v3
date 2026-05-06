@@ -1,0 +1,114 @@
+.pageHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.pageTitle { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; }
+
+.filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+
+.tableWrapper { background: white; border-radius: var(--radius); overflow: auto; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 700px; }
+.table th { padding: 12px 16px; background: #fdf5ee; font-size: 0.78rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; text-align: left; }
+.table td { padding: 12px 16px; border-bottom: 1px solid #f5ece2; vertical-align: middle; }
+.table tr:hover td { background: #fdf9f5; }
+
+.prodImg { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; }
+.prodImgPlaceholder { width: 52px; height: 52px; border-radius: 10px; background: #f0e4d4; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+
+.catBadge { background: rgba(239,98,3,0.1); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: capitalize; }
+
+.estoqueBadge { font-weight: 800; padding: 3px 10px; border-radius: 20px; font-size: 0.82rem; }
+.estoqueZero { background: #fff5f5; color: #e53e3e; }
+.estoqueBaixo { background: #fffbeb; color: #d97706; }
+.estoqueOk { background: #f0fff4; color: #2d9b3f; }
+
+.statusBadge { font-weight: 700; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; text-transform: capitalize; }
+.statusAtivo { background: #f0fff4; color: #2d9b3f; }
+.statusInativo { background: #f5f5f5; color: #888; }
+
+.acoes { display: flex; gap: 8px; }
+.btnEdit { background: rgba(49,130,206,0.1); color: #3182ce; border-radius: 8px; padding: 6px 10px; font-size: 0.9rem; cursor: pointer; }
+.btnDelete { background: rgba(229,62,62,0.1); color: #e53e3e; border-radius: 8px; padding: 6px 10px; font-size: 0.9rem; cursor: pointer; }
+.empty { text-align: center; padding: 40px; color: var(--text-secondary); }
+
+/* Modal */
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 800; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.modal { background: white; border-radius: 20px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.25); }
+.modalHeader { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px 0; }
+.modalHeader h2 { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 700; }
+.modalHeader button { background: none; font-size: 1.2rem; cursor: pointer; color: #aaa; }
+.modalForm { padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .row2, .row3 { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); }
+.checkboxRow { display: flex; gap: 20px; flex-wrap: wrap; }
+.checkbox { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+.checkbox input { accent-color: var(--primary); width: 16px; height: 16px; }
+.variacoesSection { background: #fdf5ee; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.variacoesSection h4 { font-weight: 800; font-size: 0.9rem; color: var(--primary); }
+.varRow { display: flex; gap: 12px; align-items: center; font-size: 0.88rem; background: white; padding: 8px 12px; border-radius: 8px; }
+.varRow span { flex: 1; }
+.varRow button { background: none; color: #e53e3e; cursor: pointer; }
+.novaVar { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; }
+.fileInput { font-size: 0.88rem; }
+.previewImg { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; margin-top: 8px; }
+.modalFooter { display: flex; justify-content: flex-end; gap: 12px; padding-top: 8px; border-top: 1px solid #f0e4d4; }
+
+/* ── Upload file label ── */
+.fileLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--primary);
+  color: white;
+  padding: 9px 18px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(239,98,3,0.25);
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fileLabel:hover { background: var(--primary-hover); }
+
+/* ── Modal error box ── */
+.modalErro {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin: 0 28px 12px;
+}
+
+/* ── Modal close button ── */
+.modalCloseBtn {
+  background: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #aaa;
+  padding: 4px;
+  transition: color 0.15s;
+}
+.modalCloseBtn:hover { color: var(--text); }
+
+/* ── Field error message ── */
+.fieldErr {
+  font-size: 0.76rem;
+  color: #e53e3e;
+  margin-top: 2px;
+}
+
+/* Fix existing previewImg if not already defined */
+.previewImg {
+  height: 90px;
+  max-width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(90,43,12,0.12);
+}

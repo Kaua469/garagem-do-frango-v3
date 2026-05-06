@@ -1,0 +1,147 @@
+.main {
+  padding-top: 76px;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+/* ── Banner ── */
+.banner {
+  background: linear-gradient(135deg, #150900, #3d1b06);
+  padding: 52px 0 40px;
+  margin-bottom: 0;
+}
+.bannerTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: white;
+  font-weight: 900;
+}
+.bannerSub {
+  color: rgba(255,255,255,0.65);
+  margin-top: 8px;
+  font-size: 1.05rem;
+}
+
+/* ── Sticky search + categories ── */
+.stickyBar {
+  position: sticky;
+  top: 76px;
+  z-index: 90;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(21,9,0,0.08);
+  padding: 12px 0 0;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 480px;
+  padding: 11px 18px;
+  border: 1.5px solid rgba(90,43,12,0.15);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--background);
+  outline: none;
+  transition: border-color 0.2s;
+  margin: 0 0 12px;
+  display: block;
+}
+.searchInput:focus { border-color: var(--primary); }
+
+/* ── Category scroll row ── */
+.catScroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.catScroll::-webkit-scrollbar { display: none; }
+
+/* ── Category chip base ── */
+.catChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.18s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.catIcon { font-size: 1rem; }
+
+/* ── Per-category colors ── */
+/* Todos — marrom da marca */
+.catTodos   { background: #f4e6d3; color: #5a2b0c;  border-color: #e8cfb8; }
+.catTodos.catAtivo   { background: #5a2b0c; color: #fff;    border-color: #5a2b0c; }
+
+/* Frangos — laranja */
+.catFrangos { background: #fff3e0; color: #e65100;  border-color: #ffcc80; }
+.catFrangos.catAtivo { background: #e65100; color: #fff;    border-color: #e65100; }
+
+/* Marmitas — verde */
+.catMarmitas{ background: #e8f5e9; color: #2e7d32;  border-color: #a5d6a7; }
+.catMarmitas.catAtivo{ background: #2e7d32; color: #fff;    border-color: #2e7d32; }
+
+/* Porções — âmbar */
+.catPorcoes { background: #fff8e1; color: #f57f17;  border-color: #ffe082; }
+.catPorcoes.catAtivo { background: #f57f17; color: #fff;    border-color: #f57f17; }
+
+/* Bebidas — azul */
+.catBebidas { background: #e3f2fd; color: #1565c0;  border-color: #90caf9; }
+.catBebidas.catAtivo { background: #1565c0; color: #fff;    border-color: #1565c0; }
+
+/* Sobremesas — rosa */
+.catSobre   { background: #fce4ec; color: #880e4f;  border-color: #f48fb1; }
+.catSobre.catAtivo   { background: #880e4f; color: #fff;    border-color: #880e4f; }
+
+/* Combos — roxo */
+.catCombos  { background: #f3e5f5; color: #6a1b9a;  border-color: #ce93d8; }
+.catCombos.catAtivo  { background: #6a1b9a; color: #fff;    border-color: #6a1b9a; }
+
+/* ── Product grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+  padding: 28px 0 52px;
+  align-items: stretch;    /* todos os cards com mesma altura */
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVO
+═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .main { padding-top: 64px; }
+  .banner { padding: 36px 0 28px; }
+  .stickyBar { top: 64px; padding: 10px 0 0; }
+  .searchInput { font-size: 0.9rem; padding: 10px 14px; max-width: 100%; }
+
+  .catChip { padding: 7px 14px; font-size: 0.82rem; }
+  .catIcon  { font-size: 0.9rem; }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 20px 0 40px;
+  }
+}
+
+@media (max-width: 420px) {
+  .grid { grid-template-columns: 1fr; }
+}

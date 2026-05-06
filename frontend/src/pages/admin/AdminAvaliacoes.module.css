@@ -1,0 +1,105 @@
+.pageHeader { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+.pageTitle { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 4px; }
+.pageSub { font-size: 0.88rem; color: var(--text-secondary); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.empty { padding: 60px 20px; text-align: center; color: var(--text-secondary); grid-column: 1/-1; }
+
+.card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s;
+  border-left: 4px solid var(--primary);
+}
+.card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.10); }
+.cardInativa { border-left-color: #ddd; opacity: 0.65; }
+
+.cardTop { display: flex; align-items: center; justify-content: space-between; }
+.statusPill { font-size: 0.76rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.pillAtivo   { background: #f0fff4; color: #2d9b3f; }
+.pillInativo { background: #f5f5f5; color: #888; }
+.estrelas    { font-size: 0.9rem; letter-spacing: 1px; }
+
+.comentario {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.6;
+  flex: 1;
+}
+.autor { font-weight: 800; font-size: 0.88rem; color: var(--primary); }
+.data  { font-size: 0.76rem; color: #bbb; }
+
+.acoes { display: flex; gap: 8px; padding-top: 8px; border-top: 1px solid #f0e4d4; flex-wrap: wrap; }
+.toggleBtn {
+  padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+  background: rgba(246,173,60,0.12); color: #b7791f; cursor: pointer;
+  transition: background 0.2s;
+}
+.toggleBtn:hover { background: rgba(246,173,60,0.22); }
+.editBtn {
+  padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+  background: rgba(49,130,206,0.1); color: #3182ce; cursor: pointer;
+}
+.editBtn:hover { background: rgba(49,130,206,0.2); }
+.delBtn {
+  padding: 6px 10px; border-radius: 8px; font-size: 0.9rem;
+  background: rgba(229,62,62,0.08); color: #e53e3e; cursor: pointer;
+}
+.delBtn:hover { background: rgba(229,62,62,0.15); }
+
+/* Modal */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 800;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal {
+  background: white; border-radius: 20px; width: 100%; max-width: 500px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25); overflow: hidden;
+}
+.modalHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 28px 16px; border-bottom: 1px solid #f0e4d4;
+}
+.modalHeader h2 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 700; }
+.closeBtn { background: none; font-size: 1.2rem; cursor: pointer; color: #aaa; }
+.closeBtn:hover { color: var(--text); }
+
+.modalBody { padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
+
+.erroBox {
+  background: #fff5f5; border: 1px solid #feb2b2; color: #c53030;
+  padding: 10px 14px; border-radius: 8px; font-size: 0.88rem;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); }
+
+.notaSelector { display: flex; align-items: center; gap: 6px; }
+.notaBtn {
+  background: none; font-size: 1.4rem; cursor: pointer; opacity: 0.25;
+  transition: opacity 0.15s, transform 0.15s; padding: 0;
+}
+.notaAtiva { opacity: 1; }
+.notaBtn:hover { transform: scale(1.15); }
+.notaNum { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-left: 6px; }
+
+.checkLabel {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+}
+.checkLabel input { accent-color: var(--primary); width: 17px; height: 17px; }
+
+.modalFooter {
+  display: flex; justify-content: flex-end; gap: 12px;
+  padding-top: 4px; border-top: 1px solid #f0e4d4;
+}

@@ -1,0 +1,33 @@
+.pageTitle { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 28px; }
+
+.summaryGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
+@media (max-width: 600px) { .summaryGrid { grid-template-columns: 1fr; } }
+
+.summaryCard { background: white; border-radius: var(--radius); padding: 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-top: 4px solid transparent; display: flex; flex-direction: column; gap: 6px; }
+.cardOk { border-top-color: #2d9b3f; }
+.cardWarn { border-top-color: #d97706; }
+.cardDanger { border-top-color: #e53e3e; }
+.summaryNum { font-size: 2.5rem; font-weight: 900; font-family: 'Montserrat', sans-serif; }
+.summaryLabel { font-size: 0.88rem; font-weight: 700; color: var(--text-secondary); }
+
+.tableWrapper { background: white; border-radius: var(--radius); overflow: auto; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 600px; }
+.table th { padding: 12px 16px; background: #fdf5ee; font-size: 0.78rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; text-align: left; }
+.table td { padding: 12px 16px; border-bottom: 1px solid #f5ece2; vertical-align: middle; }
+.rowDanger td { background: rgba(229,62,62,0.04); }
+.rowWarn td { background: rgba(246,173,60,0.06); }
+
+.estoqueBadge { font-weight: 800; padding: 3px 12px; border-radius: 20px; font-size: 0.82rem; }
+.estoqueZero { background: #fff5f5; color: #e53e3e; }
+.estoqueBaixo { background: #fffbeb; color: #d97706; }
+.estoqueOk { background: #f0fff4; color: #2d9b3f; }
+
+.statusBadge { font-weight: 700; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; text-transform: capitalize; }
+.statusAtivo { background: #f0fff4; color: #2d9b3f; }
+.statusInativo { background: #f5f5f5; color: #888; }
+
+.estoqueInput { width: 80px; padding: 6px 10px; border: 2px solid var(--primary); border-radius: 8px; font-weight: 700; font-size: 0.9rem; }
+.editBtns { display: flex; gap: 8px; }
+.saveBtn { background: #f0fff4; color: #2d9b3f; border-radius: 8px; padding: 6px 10px; font-size: 0.9rem; cursor: pointer; font-weight: 700; }
+.cancelBtn { background: #fff5f5; color: #e53e3e; border-radius: 8px; padding: 6px 10px; font-size: 0.9rem; cursor: pointer; }
+.editBtn { background: rgba(49,130,206,0.1); color: #3182ce; border-radius: 8px; padding: 6px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }

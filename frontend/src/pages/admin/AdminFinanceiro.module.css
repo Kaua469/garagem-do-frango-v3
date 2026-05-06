@@ -1,0 +1,161 @@
+.pageTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-bottom: 28px;
+}
+
+/* Filtro de mês */
+.mesRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.mesLabel { font-size: 0.88rem; font-weight: 700; color: var(--text-secondary); }
+.mesInput { max-width: 200px; }
+
+/* Cards de resumo */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+@media (max-width: 640px) { .summaryGrid { grid-template-columns: 1fr; } }
+
+.summCard {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-top: 4px solid transparent;
+}
+.entrada { border-top-color: #2d9b3f; }
+.saida   { border-top-color: #e53e3e; }
+.lucro   { border-top-color: #3182ce; }
+.summLabel { font-size: 0.88rem; font-weight: 700; color: var(--text-secondary); }
+.summVal   { font-size: 1.7rem; font-weight: 900; font-family: 'Montserrat', sans-serif; color: var(--text); }
+
+/* Formulário */
+.formBox {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  margin-bottom: 28px;
+}
+.formTitle { font-weight: 800; font-size: 1rem; margin-bottom: 20px; color: var(--text); }
+
+.formRow {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  align-items: flex-end;
+}
+.formRow:last-child { margin-bottom: 0; }
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 150px;
+}
+.fieldFlex { flex: 1; min-width: 220px; }
+.fieldBtn  { min-width: 120px; }
+
+.fieldLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.lancarBtn {
+  background: var(--primary);
+  color: white;
+  padding: 13px 22px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+  border: none;
+  box-shadow: 0 3px 10px rgba(239,98,3,0.25);
+}
+.lancarBtn:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
+.lancarBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Tabela */
+.tableWrapper {
+  background: white;
+  border-radius: var(--radius);
+  overflow: auto;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 540px;
+}
+.table th {
+  padding: 12px 16px;
+  background: #fdf5ee;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+.table td { padding: 12px 16px; border-bottom: 1px solid #f5ece2; vertical-align: middle; }
+.table tr:hover td { background: #fdf9f5; }
+.table tr:last-child td { border-bottom: none; }
+
+.tdData { white-space: nowrap; font-weight: 600; color: var(--text-secondary); }
+.tdCat  { text-transform: capitalize; color: var(--text-secondary); font-size: 0.82rem; }
+.emptyCell { text-align: center; padding: 48px; color: #bbb; }
+
+.tipoBadge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.tipoEntrada { background: #f0fff4; color: #2d9b3f; }
+.tipoSaida   { background: #fff5f5; color: #e53e3e; }
+
+@media (max-width: 700px) {
+  .formBox { padding: 20px 16px; }
+  .formField { min-width: 100%; }
+}
+
+/* Pagamentos por forma */
+.pgtoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.pgtoCard {
+  background: white;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-top: 3px solid var(--primary);
+}
+.pgtoIcon { font-size: 1.8rem; flex-shrink: 0; }
+.pgtoLabel { font-size: 0.78rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.pgtoValor { font-size: 1.2rem; font-weight: 900; color: var(--text); }
+.pgtoQtd   { font-size: 0.76rem; color: var(--text-secondary); margin-top: 1px; }

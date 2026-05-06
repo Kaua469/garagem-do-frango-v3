@@ -1,0 +1,135 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #150900 0%, #3d1b06 40%, #5a2b0c 70%, #ef6203 100%);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: 80px;
+}
+/* Hero background is set dynamically via inline style from config.hero_imagem */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(239,98,3,0.2) 0%, transparent 70%);
+}
+.heroContent {
+  position: relative;
+  z-index: 2;
+  padding-top: 60px;
+  padding-bottom: 100px;
+}
+.heroText { max-width: 680px; }
+.heroBadge {
+  display: inline-block;
+  background: rgba(239,98,3,0.25);
+  border: 1px solid rgba(239,98,3,0.5);
+  color: #ffa060;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 50px;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+}
+.heroTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 900;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.heroSubtitle {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: rgba(255,255,255,0.8);
+  max-width: 520px;
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+.heroBtns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.heroWave {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+}
+.heroWave svg { display: block; width: 100%; }
+
+.section { padding: 80px 0; }
+.sectionDark {
+  background: var(--header-footer);
+  margin: 0 -20px;
+  padding: 80px 20px;
+}
+.sectionLight { background: rgba(239,98,3,0.04); }
+
+.sectionTag {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+  margin-top: 16px;
+  align-items: stretch;
+}
+
+.novidadesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+.novidadeCard {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.novidadeImg { width: 100%; height: 180px; object-fit: cover; }
+.novidadeBody { padding: 20px; }
+.novidadeTitulo { font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; margin-bottom: 8px; }
+.novidadeDesc { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.6; }
+
+.avaliacoesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+.avaliacaoCard {
+  background: var(--background-card);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(239,98,3,0.1);
+}
+.estrelas { font-size: 1.1rem; margin-bottom: 12px; }
+.avaliacaoText { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; font-style: italic; margin-bottom: 16px; }
+.avaliacaoAutor { font-weight: 800; font-size: 0.88rem; color: var(--primary); }
+
+.ctaSection { padding: 80px 0; }
+.ctaBox {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  border-radius: 24px;
+  padding: 60px 48px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(239,98,3,0.35);
+}
+.ctaTitle { font-family: 'Montserrat', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; color: white; margin-bottom: 16px; }
+.ctaSub { font-size: 1.05rem; color: rgba(255,255,255,0.9); margin-bottom: 8px; }
+.ctaEndereco { font-size: 0.95rem; color: rgba(255,255,255,0.75); margin-bottom: 32px; }
+
+@media (max-width: 768px) {
+  .heroContent { padding-top: 40px; padding-bottom: 80px; }
+  .ctaBox { padding: 40px 24px; }
+  .heroBtns { flex-direction: column; }
+}
