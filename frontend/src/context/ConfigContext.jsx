@@ -74,20 +74,10 @@ export function ConfigProvider({ children }) {
    * caracteres não numéricos e garantindo o DDI 55.
    */
   const getWhatsAppUrl = useCallback((numero) => {
-    if (!numero) return '';
-    let limpo = String(numero).replace(/\D/g, '');
-    
-    // Se o número for brasileiro (10 ou 11 dígitos), força o 55 na frente
-    if (limpo.length === 10 || limpo.length === 11) {
-      limpo = `55${limpo}`;
-    }
-    
-    // Se ainda não começar com 55, mas tiver cara de número com DDD (ex: 16...), adiciona 55
-    if (!limpo.startsWith('55') && limpo.length >= 10) {
-      limpo = `55${limpo}`;
-    }
-
-    return `https://wa.me/${limpo}`;
+    const num = numero || '16991297878';
+    const limpo = String(num).replace(/\D/g, '');
+    const ddi = limpo.startsWith('55') ? limpo : `55${limpo}`;
+    return `https://wa.me/${ddi}`;
   }, []);
 
   return (
