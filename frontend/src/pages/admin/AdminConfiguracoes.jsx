@@ -83,6 +83,11 @@ export default function AdminConfiguracoes() {
     finally { setSaving(false); }
   };
 
+  const bustImageUrl = (url) => {
+    if (!url) return '';
+    return `${url}?t=${Date.now()}`;
+  };
+
   if (loading) return <div className="spinner" />;
 
   return (

@@ -71,20 +71,30 @@ export function NotificationProvider({ children }) {
     setToasts(prev => prev.filter(t => t.toastId !== toastId));
   }
 
-  function tocarSom() {
+  async function tocarSom() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === 'suspended') {
+        await ctx.resume();
+      }
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
-      osc.frequency.setValueAtTime(880, ctx.currentTime);
-      osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      
+      // Som de "Ding-Dong" (Dois tons)
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime); // Lá
+      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.5); // Lá oitava abaixo
+      
+      gain.gain.setValueAtTime(0.5, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+      
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.5);
-    } catch (e) {}
+    } catch (e) {
+      console.error('Erro ao tocar som:', e);
+    }
   }
 
   return (
