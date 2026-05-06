@@ -75,10 +75,19 @@ export function ConfigProvider({ children }) {
    */
   const getWhatsAppUrl = useCallback((numero) => {
     if (!numero) return '';
-    const limpo = String(numero).replace(/\D/g, '');
-    // Se tiver 10 ou 11 dígitos, adiciona 55 na frente
-    const comDdi = limpo.length <= 11 ? `55${limpo}` : limpo;
-    return `https://wa.me/${comDdi}`;
+    let limpo = String(numero).replace(/\D/g, '');
+    
+    // Se o número for brasileiro (10 ou 11 dígitos), força o 55 na frente
+    if (limpo.length === 10 || limpo.length === 11) {
+      limpo = `55${limpo}`;
+    }
+    
+    // Se ainda não começar com 55, mas tiver cara de número com DDD (ex: 16...), adiciona 55
+    if (!limpo.startsWith('55') && limpo.length >= 10) {
+      limpo = `55${limpo}`;
+    }
+
+    return `https://wa.me/${limpo}`;
   }, []);
 
   return (
