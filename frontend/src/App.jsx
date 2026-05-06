@@ -12,6 +12,7 @@ import Login      from './pages/public/Login';
 import Cadastro   from './pages/public/Cadastro';
 import MinhaConta from './pages/public/MinhaConta';
 import NotFound   from './pages/public/NotFound';
+import FloatingWhatsApp from './components/public/FloatingWhatsApp';
 
 // Admin pages
 import AdminLayout        from './pages/admin/AdminLayout';
@@ -42,7 +43,6 @@ function PrimeiroAcessoGuard({ children }) {
   return children;
 }
 
-import FloatingWhatsApp from './components/public/FloatingWhatsApp';
 
 export default function App() {
   return (
