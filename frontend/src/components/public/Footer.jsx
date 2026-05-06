@@ -22,7 +22,7 @@ export default function Footer() {
         <div className={styles.col}>
           <h4 className={styles.colTitle}>Contato</h4>
           <a href={`tel:${config.telefone}`} className={styles.link}>📞 {config.telefone}</a>
-          <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noreferrer" className={styles.link}>💬 WhatsApp</a>
+          <a href={getWhatsAppUrl(config.whatsapp)} target="_blank" rel="noreferrer" className={styles.link}>💬 WhatsApp</a>
           <a href={`https://instagram.com/${config.instagram}`} target="_blank" rel="noreferrer" className={styles.link}>📸 @{config.instagram}</a>
           <a href={`https://facebook.com/${config.facebook}`} target="_blank" rel="noreferrer" className={styles.link}>👍 Facebook</a>
         </div>

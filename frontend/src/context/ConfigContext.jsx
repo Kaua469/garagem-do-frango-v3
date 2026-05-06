@@ -69,6 +69,18 @@ export function ConfigProvider({ children }) {
     }
   }, [imageVersion]);
 
+  /**
+   * Retorna a URL completa para wa.me (WhatsApp) limpando
+   * caracteres não numéricos e garantindo o DDI 55.
+   */
+  const getWhatsAppUrl = useCallback((numero) => {
+    if (!numero) return '';
+    const limpo = String(numero).replace(/\D/g, '');
+    // Se tiver 10 ou 11 dígitos, adiciona 55 na frente
+    const comDdi = limpo.length <= 11 ? `55${limpo}` : limpo;
+    return `https://wa.me/${comDdi}`;
+  }, []);
+
   return (
     <ConfigContext.Provider value={{
       config,
@@ -76,6 +88,7 @@ export function ConfigProvider({ children }) {
       reloadConfig,
       invalidateImages,
       bustImageUrl,
+      getWhatsAppUrl,
       imageVersion,
     }}>
       {children}

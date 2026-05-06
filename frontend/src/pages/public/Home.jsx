@@ -58,7 +58,7 @@ export default function Home() {
               <div className={styles.heroBtns}>
                 <Link to="/cardapio" className="btn-primary">🍗 Fazer Pedido</Link>
                 <a
-                  href={`https://wa.me/${config.whatsapp}`}
+                  href={getWhatsAppUrl(config.whatsapp)}
                   target="_blank"
                   rel="noreferrer"
                   className="btn-secondary"
