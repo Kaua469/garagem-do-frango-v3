@@ -42,6 +42,8 @@ function PrimeiroAcessoGuard({ children }) {
   return children;
 }
 
+import FloatingWhatsApp from './components/public/FloatingWhatsApp';
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -95,6 +97,7 @@ export default function App() {
                 {/* ── 404 ── */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <FloatingWhatsApp />
             </NotificationProvider>
           </CartProvider>
         </AuthProvider>

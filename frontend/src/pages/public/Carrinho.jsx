@@ -14,7 +14,7 @@ import styles from './Carrinho.module.css';
 export default function Carrinho() {
   const { itens, removerItem, alterarQuantidade, subtotal, limparCarrinho } = useCart();
   const { usuario } = useAuth();
-  const { config } = useConfig();
+  const { config, getWhatsAppUrl } = useConfig();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [pedidoFinalizado, setPedidoFinalizado] = useState(null);
@@ -57,6 +57,24 @@ export default function Carrinho() {
 
   /* ── Pedido finalizado ── */
   if (pedidoFinalizado) {
+    const gerarMensagemWhatsApp = () => {
+      const itensTexto = pedidoFinalizado.itens.map(i => 
+        `• ${i.quantidade}x ${i.nome_produto}${i.nome_variacao ? ` (${i.nome_variacao})` : ''} - R$ ${(i.preco_unitario * i.quantidade).toFixed(2)}`
+      ).join('\n');
+
+      const mensagem = `*NOVO PEDIDO #${pedidoFinalizado.numero}*\n\n` +
+        `👤 *Cliente:* ${pedidoFinalizado.nome_cliente}\n` +
+        `📞 *Telefone:* ${pedidoFinalizado.telefone_cliente}\n` +
+        `📍 *Endereço:* ${pedidoFinalizado.endereco_entrega}\n\n` +
+        `🛒 *Itens:*\n${itensTexto}\n\n` +
+        `💳 *Pagamento:* ${pedidoFinalizado.forma_pagamento.toUpperCase()}\n` +
+        `💰 *Total:* R$ ${Number(pedidoFinalizado.total).toFixed(2)}\n\n` +
+        `🕒 _Pedido realizado via site._`;
+
+      const baseUrl = getWhatsAppUrl(config.whatsapp);
+      window.open(`${baseUrl}&text=${encodeURIComponent(mensagem)}`, '_blank');
+    };
+
     return (
       <>
         <Header />
@@ -66,8 +84,16 @@ export default function Carrinho() {
               <div className={styles.successIcon}>🎉</div>
               <h2 className={styles.successTitle}>Pedido realizado!</h2>
               <p className={styles.successText}>Seu pedido <strong>#{pedidoFinalizado.numero}</strong> foi recebido com sucesso.</p>
-              <p className={styles.successTotal}>Total: R$ {Number(pedidoFinalizado.total).toFixed(2)}</p>
-              <Link to="/inicio" className="btn-primary">Voltar ao Início</Link>
+              
+              <div className={styles.successActions}>
+                <button 
+                  onClick={gerarMensagemWhatsApp} 
+                  className={styles.whatsappSuccessBtn}
+                >
+                  📱 Enviar Pedido para o WhatsApp
+                </button>
+                <Link to="/inicio" className={styles.linkBack}>Voltar ao Início</Link>
+              </div>
             </motion.div>
           </div>
         </main>

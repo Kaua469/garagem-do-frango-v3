@@ -306,6 +306,43 @@
 .successText  { color: var(--text-secondary); margin-bottom: 8px; }
 .successTotal { font-size: 1.4rem; font-weight: 900; color: var(--primary); margin-bottom: 32px; }
 
+.successActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.whatsappSuccessBtn {
+  background: #25d366;
+  color: white;
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  transition: transform 0.2s, background 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.whatsappSuccessBtn:hover {
+  background: #20bd5a;
+  transform: translateY(-2px);
+}
+
+.linkBack {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
 /* ═══════════════════════════════════════
    RESPONSIVO — tablet
 ═══════════════════════════════════════ */
