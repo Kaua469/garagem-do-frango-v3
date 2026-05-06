@@ -3,7 +3,7 @@ import { useConfig } from '../../context/ConfigContext';
 import styles from './Footer.module.css';
 
 export default function Footer() {
-  const { config } = useConfig();
+  const { config, getWhatsAppUrl } = useConfig();
 
   return (
     <footer className={styles.footer}>

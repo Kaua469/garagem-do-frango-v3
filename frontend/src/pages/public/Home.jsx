@@ -10,7 +10,7 @@ import api from '../../services/api';
 import styles from './Home.module.css';
 
 export default function Home() {
-  const { config, bustImageUrl } = useConfig();
+  const { config, bustImageUrl, getWhatsAppUrl } = useConfig();
   const [maisVendidos, setMaisVendidos] = useState([]);
   const [novidades, setNovidades] = useState([]);
   const [combos, setCombos] = useState([]);
