@@ -30,14 +30,26 @@ export function ConfigProvider({ children }) {
   const [config, setConfig]             = useState(DEFAULT_CONFIG);
   const [imageVersion, setImageVersion] = useState(0);
 
-  // Carrega configurações do banco
-  const reloadConfig = useCallback(() => {
-    return api.get('/configuracoes')
-      .then(({ data }) => setConfig(data))
-      .catch(() => {});
+  // Carrega configurações do banco com fallback para o padrão
+  const reloadConfig = useCallback(async () => {
+    try {
+      const { data } = await api.get('/configuracoes');
+      if (data && typeof data === 'object') {
+        // Garante que o WhatsApp nunca venha vazio do banco
+        if (!data.whatsapp) data.whatsapp = '16991297878';
+        setConfig(prev => ({ ...prev, ...data }));
+      }
+    } catch (err) {
+      console.warn('⚠️ Falha ao carregar config do servidor, usando padrões.', err.message);
+      // Mantém o DEFAULT_CONFIG se o servidor falhar
+    }
   }, []);
 
-  useEffect(() => { reloadConfig(); }, [reloadConfig]);
+  useEffect(() => {
+    let active = true;
+    if (active) reloadConfig();
+    return () => { active = false; };
+  }, [reloadConfig]);
 
   /**
    * Incrementa imageVersion e recarrega config.
