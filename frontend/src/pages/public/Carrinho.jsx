@@ -72,7 +72,7 @@ export default function Carrinho() {
         `🕒 _Pedido realizado via site._`;
 
       const baseUrl = getWhatsAppUrl(config.whatsapp);
-      window.open(`${baseUrl}&text=${encodeURIComponent(mensagem)}`, '_blank');
+      window.open(`${baseUrl}text=${encodeURIComponent(mensagem)}`, '_blank');
     };
 
     return (

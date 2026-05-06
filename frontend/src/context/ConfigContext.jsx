@@ -87,7 +87,7 @@ export function ConfigProvider({ children }) {
       limpo = `55${limpo}`;
     }
 
-    return `https://wa.me/${limpo}`;
+    return `https://wa.me/${limpo}?`;
   }, []);
 
   return (
