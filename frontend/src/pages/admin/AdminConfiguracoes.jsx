@@ -308,7 +308,7 @@ function UploadField({ label, chave, config, setConfig, invalidateImages, showMs
       {(preview || currentUrl) && (
         <div className={styles.uploadPreviewWrap}>
           <img
-            src={preview || (bustImageUrl ? bustImageUrl(getImageUrl(currentUrl)) : getImageUrl(currentUrl))}
+            src={preview || (bust ? bust(getImageUrl(currentUrl)) : getImageUrl(currentUrl))}
             alt={label}
             className={styles.uploadPreview}
             onError={e => { e.target.style.display = 'none'; }}
