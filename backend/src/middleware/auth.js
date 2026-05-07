@@ -28,11 +28,11 @@ async function authMiddleware(req, res, next) {
 }
 
 // ── adminMiddleware ────────────────────────────────────────────────────────
-async function adminMiddleware(req, res, next) {
-  // Chama o authMiddleware e espera ele terminar
-  await authMiddleware(req, res, () => {
-    if (!req.usuario) return; // authMiddleware já enviou erro
-    
+// FIX: não usa callback aninhado — cadeia corretamente com next()
+function adminMiddleware(req, res, next) {
+  authMiddleware(req, res, (err) => {
+    if (err) return; // authMiddleware já respondeu
+    if (!req.usuario) return res.status(401).json({ error: 'Não autenticado' });
     if (req.usuario.tipo !== 'dona') {
       return res.status(403).json({ error: 'Acesso negado — apenas a dona pode acessar esta área' });
     }

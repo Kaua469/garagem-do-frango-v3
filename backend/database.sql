@@ -3,7 +3,7 @@
 -- Execute no SQL Editor do Supabase
 -- ============================================================
 
--- Extensão para UUID (opcional, não usamos aqui mas boa prática)   
+-- Extensão para UUID (opcional, não usamos aqui mas boa prática)
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ============================================================

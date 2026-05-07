@@ -116,11 +116,12 @@ router.post('/', adminMiddleware, async (req, res) => {
 
 // PUT /api/produtos/:id (admin)
 router.put('/:id', adminMiddleware, async (req, res) => {
+  const client = await db.connect();
   try {
     const {
       nome, descricao, categoria, preco, estoque, status, imagem,
       mais_vendido, novidade, combo_semana, tem_variacao, tem_quantidade,
-      qtd_min, qtd_max
+      qtd_min, qtd_max, variacoes
     } = req.body;
 
     // Validação
@@ -128,7 +129,9 @@ router.put('/:id', adminMiddleware, async (req, res) => {
     const ID = parseInt(req.params.id);
     if (isNaN(ID)) return res.status(400).json({ error: 'ID inválido' });
 
-    await db.query(
+    await client.query('BEGIN');
+
+    await client.query(
       `UPDATE produtos SET
         nome=$1,descricao=$2,categoria=$3,preco=$4,estoque=$5,status=$6,imagem=$7,
         mais_vendido=$8,novidade=$9,combo_semana=$10,tem_variacao=$11,
@@ -139,45 +142,61 @@ router.put('/:id', adminMiddleware, async (req, res) => {
         !!mais_vendido, !!novidade, !!combo_semana,
         !!tem_variacao, !!tem_quantidade,
         qtd_min || 1, qtd_max || 20,
-        req.params.id
+        ID
       ]
     );
 
-    // --- SINCRONIZAÇÃO DE VARIAÇÕES ---
-    const { variacoes } = req.body;
-    if (variacoes && Array.isArray(variacoes)) {
-      // 1. Desativa todas as variações atuais deste produto
-      await db.query('UPDATE variacoes_produto SET ativo = FALSE WHERE produto_id = $1', [req.params.id]);
+    // Sincronização de Variações
+    if (tem_variacao && Array.isArray(variacoes)) {
+      // 1. Obter IDs atuais no banco
+      const { rows: existingRows } = await client.query(
+        'SELECT id FROM variacoes_produto WHERE produto_id = $1', [ID]
+      );
+      const existingIds = existingRows.map(r => r.id);
 
-      // 2. Processa a lista enviada
+      // 2. Identificar o que manter/atualizar e o que inserir
+      const updatedIds = variacoes.filter(v => typeof v.id === 'number').map(v => v.id);
+      const toDelete = existingIds.filter(id => !updatedIds.includes(id));
+
+      // 3. Deletar as que saíram
+      if (toDelete.length > 0) {
+        await client.query('DELETE FROM variacoes_produto WHERE id = ANY($1)', [toDelete]);
+      }
+
+      // 4. Inserir novas ou Atualizar existentes
       for (const v of variacoes) {
-        // Se a variação tem um ID real (numérico), nós a reativamos e atualizamos
-        if (v.id && !String(v.id).startsWith('tmp_')) {
-          await db.query(
-            `UPDATE variacoes_produto 
-             SET nome=$1, preco=$2, estoque=$3, ativo=TRUE 
-             WHERE id=$4 AND produto_id=$5`,
-            [v.nome, v.preco, v.estoque || 0, v.id, req.params.id]
+        if (typeof v.id === 'number') {
+          await client.query(
+            'UPDATE variacoes_produto SET nome=$1, preco=$2, estoque=$3 WHERE id=$4',
+            [v.nome, v.preco, v.estoque || 0, v.id]
           );
         } else {
-          // Se não tem ID ou é um ID temporário (tmp_...), criamos uma nova
-          await db.query(
-            'INSERT INTO variacoes_produto (produto_id, nome, preco, estoque, ativo) VALUES ($1, $2, $3, $4, TRUE)',
-            [req.params.id, v.nome, v.preco, v.estoque || 0]
+          await client.query(
+            'INSERT INTO variacoes_produto (produto_id, nome, preco, estoque) VALUES ($1,$2,$3,$4)',
+            [ID, v.nome, v.preco, v.estoque || 0]
           );
         }
       }
+    } else if (!tem_variacao) {
+      // Se desmarcou "tem_variacao", opcionalmente deletamos todas (ou mantemos inativas)
+      // Aqui vamos deletar para manter o banco limpo se a flag for desativada
+      await client.query('DELETE FROM variacoes_produto WHERE produto_id = $1', [ID]);
     }
 
-    // Notificações de estoque
-    const { emitirEstoqueBaixo, emitirProdutoIndisponivel } = require('../services/notificationService');
-    if (Number(estoque) === 0) await emitirProdutoIndisponivel({ id: req.params.id, nome });
-    else if (Number(estoque) < 3) await emitirEstoqueBaixo({ id: req.params.id, nome, estoque });
+    await client.query('COMMIT');
 
-    res.json({ message: 'Produto atualizado' });
+    // Notificações de estoque (simplificado para o produto principal)
+    const { emitirEstoqueBaixo, emitirProdutoIndisponivel } = require('../services/notificationService');
+    if (Number(estoque) === 0) await emitirProdutoIndisponivel({ id: ID, nome });
+    else if (Number(estoque) < 3) await emitirEstoqueBaixo({ id: ID, nome, estoque });
+
+    res.json({ message: 'Produto e variações atualizados com sucesso' });
   } catch (err) {
+    await client.query('ROLLBACK');
     console.error(err);
     res.status(500).json({ error: 'Erro ao atualizar produto' });
+  } finally {
+    client.release();
   }
 });
 
