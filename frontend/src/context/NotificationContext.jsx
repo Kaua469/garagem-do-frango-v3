@@ -56,12 +56,14 @@ export function NotificationProvider({ children }) {
       const notif = { id: Date.now(), tipo: 'estoque_baixo', titulo: '⚠️ Estoque baixo!', dados, lida: false, criado_em: new Date().toISOString() };
       addNotificacao(notif);
       addToast(notif);
+      tocarSom();
     });
 
     socket.on('produto-indisponivel', (dados) => {
       const notif = { id: Date.now(), tipo: 'produto_indisponivel', titulo: '🚫 Produto indisponível!', dados, lida: false, criado_em: new Date().toISOString() };
       addNotificacao(notif);
       addToast(notif);
+      tocarSom();
     });
 
     return () => socket.disconnect();
