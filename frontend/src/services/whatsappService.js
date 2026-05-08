@@ -125,7 +125,7 @@ export async function enviarWhatsAppAutomatico(pedido, nomeLoja = 'Garagem do Fr
       `https://api.z-api.io/instances/${instance}/token/${token}/send-text`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
         body: JSON.stringify({ phone: fone, message: mensagem }),
       }
     );
