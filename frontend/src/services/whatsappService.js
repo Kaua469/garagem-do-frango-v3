@@ -3,48 +3,32 @@ import axios from 'axios';
 const nomeLoja = 'Garagem do Frango';
 
 const STATUS_CONFIG = {
-  aguardando:   { emoji: '⏳', texto: 'Aguardando confirmação' },
-  confirmado:   { emoji: '✅', texto: 'Confirmado! Estamos separando seu pedido' },
-  preparando:   { emoji: '👨‍🍳', texto: 'Na cozinha! Seu pedido está sendo preparado' },
-  saiu_entrega: { emoji: '🛵', texto: 'Saiu para entrega! Já chega aí' },
-  entregue:     { emoji: '🎉', texto: 'Entregue! Bom apetite!' },
-  cancelado:    { emoji: '❌', texto: 'Pedido cancelado' },
+  aguardando:   { emoji: '', texto: 'Aguardando confirmacao' },
+  confirmado:   { emoji: '', texto: 'Confirmado! Estamos separando seu pedido' },
+  preparando:   { emoji: '', texto: 'Na cozinha! Seu pedido esta sendo preparado' },
+  saiu_entrega: { emoji: '', texto: 'Saiu para entrega! Ja chega ai' },
+  entregue:     { emoji: '', texto: 'Entregue! Bom apetite!' },
+  cancelado:    { emoji: '', texto: 'Pedido cancelado' },
 };
 
 function montarMensagem(pedido, nomeLoja = 'Garagem do Frango') {
-  const cfg   = STATUS_CONFIG[pedido.status] || { emoji: '📦', texto: pedido.status };
+  const cfg   = STATUS_CONFIG[pedido.status] || { emoji: '', texto: pedido.status };
   const total = `R$ ${Number(pedido.total).toFixed(2).replace('.', ',')}`;
 
   const linhas = [
-    `${cfg.emoji} *${nomeLoja}*`,
+    `*${nomeLoja}*`,
     '',
-    `Olá, *${pedido.nome_cliente}*! 👋`,
+    `Ola, *${pedido.nome_cliente}*!`,
     '',
-    `Atualização do seu pedido *#${pedido.numero}*:`,
+    `Atualizacao do seu pedido *#${pedido.numero}*:`,
     '',
-    `📌 *Status:* ${cfg.emoji} ${cfg.texto}`,
-    `💰 *Total:* ${total}`,
+    `Status: ${cfg.texto}`,
+    `Total: ${total}`,
+    '',
+    'Garagem do Frango -- Feito com amor!'
   ];
 
-  if (pedido.status === 'saiu_entrega') {
-    linhas.push(`📍 *Endereço:* ${pedido.endereco_entrega}`);
-  }
-
-  if (pedido.status === 'entregue') {
-    linhas.push('', `⭐ Adoramos te atender! Obrigado pela confiança.`);
-  }
-
-  if (pedido.status === 'cancelado') {
-    linhas.push('', `Em caso de dúvidas, fale conosco. 😊`);
-  }
-
-  if (pedido.status === 'confirmado' || pedido.status === 'preparando') {
-    linhas.push('⏲️ Em breve atualizamos novamente!');
-  }
-
-  linhas.push('', `🍗 Garagem do Frango — Feito com amor!`);
-
-  return linhas.join('\r\n'); 
+  return linhas.join('\n');
 }
 
 export function gerarLinkWhatsApp(pedido, nomeLoja = 'Garagem do Frango') {
@@ -82,29 +66,13 @@ export async function enviarWhatsAppAutomatico(pedido, nomeLoja = 'Garagem do Fr
   if (!fone) return false;
   if (!fone.startsWith('55')) fone = '55' + fone;
 
-  // Monta a mensagem base
-  const mensagemPura = montarMensagem(pedido, nomeLoja);
-
-  // Técnica de escape manual: transforma emojis em sequências que a API entende sem erro de encoding
-  const mensagemEscapada = mensagemPura.split('').map(char => {
-    const code = char.charCodeAt(0);
-    // Se for um caractere "normal" (ASCII), mantém. Se for especial ou emoji, escapa.
-    return code > 127 ? `\\u${code.toString(16).toUpperCase().padStart(4, '0')}` : char;
-  }).join('');
+  const mensagem = montarMensagem(pedido, nomeLoja);
 
   try {
     const { data } = await axios.post(
       `https://api.z-api.io/instances/${instance}/token/${token}/send-text`,
-      { 
-        phone: fone, 
-        message: mensagemPura // Vamos tentar enviar a pura mas com o header forçado primeiro
-      },
-      { 
-        headers: { 
-          'Content-Type': 'application/json; charset=utf-8',
-          'Accept': 'application/json'
-        } 
-      }
+      { phone: fone, message: mensagem },
+      { headers: { 'Content-Type': 'application/json' } }
     );
     return !!data;
   } catch (err) {
