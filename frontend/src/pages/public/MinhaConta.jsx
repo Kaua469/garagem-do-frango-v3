@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../../components/public/Header';
 import Footer from '../../components/public/Footer';
 import { useAuth } from '../../context/AuthContext';
