@@ -14,12 +14,12 @@
 
 // Status com emojis completos — visíveis no WhatsApp
 const STATUS_CONFIG = {
-  aguardando:   { emoji: '\u23F3', texto: 'Aguardando confirmação' },
-  confirmado:   { emoji: '\u2705', texto: 'Confirmado! Estamos separando seu pedido' },
-  preparando:   { emoji: '\uD83D\uDC68\u200D\uD83C\uDF73', texto: 'Na cozinha! Seu pedido está sendo preparado' },
-  saiu_entrega: { emoji: '\uD83D\uDEF5', texto: 'Saiu para entrega! Já chega aí' },
-  entregue:     { emoji: '\uD83C\uDF89', texto: 'Entregue! Bom apetite!' },
-  cancelado:    { emoji: '\u274C', texto: 'Pedido cancelado' },
+  aguardando:   { emoji: '⏳', texto: 'Aguardando confirmação' },
+  confirmado:   { emoji: '✅', texto: 'Confirmado! Estamos separando seu pedido' },
+  preparando:   { emoji: '👨‍🍳', texto: 'Na cozinha! Seu pedido está sendo preparado' },
+  saiu_entrega: { emoji: '🛵', texto: 'Saiu para entrega! Já chega aí' },
+  entregue:     { emoji: '🎉', texto: 'Entregue! Bom apetite!' },
+  cancelado:    { emoji: '❌', texto: 'Pedido cancelado' },
 };
 
 /**
@@ -34,31 +34,31 @@ function montarMensagem(pedido, nomeLoja = 'Garagem do Frango') {
   const linhas = [
     `${cfg.emoji} *${nomeLoja}*`,
     ``,
-    `Olá, *${pedido.nome_cliente}*! \uD83D\uDC4B`,
+    `Olá, *${pedido.nome_cliente}*! 👋`,
     ``,
     `Atualização do seu pedido *#${pedido.numero}*:`,
     ``,
-    `\uD83D\uDCCC *Status:* ${cfg.emoji} ${cfg.texto}`,
-    `\uD83D\uDCB0 *Total:* ${total}`,
+    `📌 *Status:* ${cfg.emoji} ${cfg.texto}`,
+    `💰 *Total:* ${total}`,
   ];
 
   if (pedido.status === 'saiu_entrega') {
-    linhas.push(`\uD83D\uDCCD *Endereço:* ${pedido.endereco_entrega}`);
+    linhas.push(`📍 *Endereço:* ${pedido.endereco_entrega}`);
   }
 
   if (pedido.status === 'entregue') {
-    linhas.push(``, `\u2B50 Adoramos te atender! Obrigado pela confiança.`);
+    linhas.push(``, `⭐ Adoramos te atender! Obrigado pela confiança.`);
   }
 
   if (pedido.status === 'cancelado') {
-    linhas.push(``, `Em caso de dúvidas, fale conosco. \uD83D\uDE0A`);
+    linhas.push(``, `Em caso de dúvidas, fale conosco. 😊`);
   }
 
   if (pedido.status === 'confirmado' || pedido.status === 'preparando') {
-    linhas.push(`\u23F1\uFE0F Em breve atualizamos novamente!`);
+    linhas.push(`⏲️ Em breve atualizamos novamente!`);
   }
 
-  linhas.push(``, `\uD83C\uDF57 Garagem do Frango — Feito com amor!`);
+  linhas.push(``, `🍗 Garagem do Frango — Feito com amor!`);
 
   return linhas.join('\n');
 }
@@ -118,14 +118,14 @@ export async function enviarWhatsAppAutomatico(pedido, nomeLoja = 'Garagem do Fr
   if (!fone) return false;
   if (!fone.startsWith('55')) fone = '55' + fone;
 
-  const mensagem = montarMensagem(pedido, nomeLoja);
+  const mensagem = montarMensagem(pedido, nomeLoja).normalize('NFC');
 
   try {
     const resp = await fetch(
       `https://api.z-api.io/instances/${instance}/token/${token}/send-text`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: fone, message: mensagem }),
       }
     );
