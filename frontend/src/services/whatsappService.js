@@ -3,29 +3,47 @@ import axios from 'axios';
 const nomeLoja = 'Garagem do Frango';
 
 const STATUS_CONFIG = {
-  aguardando:   { texto: 'Aguardando confirmação' },
-  confirmado:   { texto: 'Confirmado! Estamos separando seu pedido' },
-  preparando:   { texto: 'Na cozinha! Seu pedido está sendo preparado' },
-  saiu_entrega: { texto: 'Saiu para entrega! Já chega aí' },
-  entregue:     { texto: 'Entregue! Bom apetite!' },
-  cancelado:    { texto: 'Pedido cancelado' },
+  aguardando:   { texto: '⏳ Aguardando confirmação' },
+  confirmado:   { texto: '✅ Confirmado! Estamos separando seu pedido' },
+  preparando:   { texto: '👨‍🍳 Na cozinha! Seu pedido está sendo preparado' },
+  saiu_entrega: { texto: '🛵 Saiu para entrega! O motoboy já está a caminho' },
+  entregue:     { texto: '🎉 Entregue! Bom apetite!' },
+  cancelado:    { texto: '❌ Pedido cancelado' },
 };
 
 function montarMensagem(pedido, nomeLoja = 'Garagem do Frango') {
   const cfg   = STATUS_CONFIG[pedido.status] || { texto: pedido.status };
   const total = `R$ ${Number(pedido.total).toFixed(2).replace('.', ',')}`;
+  const subtotal = `R$ ${Number(pedido.subtotal).toFixed(2).replace('.', ',')}`;
+  const taxa = `R$ ${Number(pedido.taxa_entrega).toFixed(2).replace('.', ',')}`;
+
+  const itensTexto = (pedido.itens || []).map(i => {
+    const varText = i.nome_variacao ? ` (${i.nome_variacao})` : '';
+    return `- ${i.quantidade}x ${i.nome_produto}${varText}: R$ ${Number(i.preco_total).toFixed(2).replace('.', ',')}`;
+  }).join('\n');
 
   const linhas = [
-    `*${nomeLoja}*`,
+    `*${nomeLoja}* 🍗`,
     '',
     `Olá, *${pedido.nome_cliente}*!`,
-    '',
     `Atualização do seu pedido *#${pedido.numero}*:`,
     '',
-    `Status: ${cfg.texto}`,
-    `Total: ${total}`,
+    `📍 *Status: ${cfg.texto}*`,
+    '----------------------------------',
     '',
-    'Garagem do Frango -- Feito com amor!'
+    `📦 *Itens do pedido:*`,
+    itensTexto,
+    '',
+    `💵 *Resumo:*`,
+    `Subtotal: ${subtotal}`,
+    `Taxa de entrega: ${taxa}`,
+    `*Total: ${total}*`,
+    '',
+    `💳 *Pagamento:* ${pedido.forma_pagamento}${pedido.tipo_cartao ? ` (${pedido.tipo_cartao})` : ''}`,
+    `📍 *Entrega:* ${pedido.endereco_entrega}`,
+    '',
+    '----------------------------------',
+    '_Garagem do Frango -- Feito com amor!_'
   ];
 
   return linhas.join('\n');

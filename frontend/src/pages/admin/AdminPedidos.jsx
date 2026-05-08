@@ -41,9 +41,14 @@ export default function AdminPedidos() {
   }, [filtroStatus]);
 
   const abrirDetalhes = async (p) => {
-    setDetalhes(p);
-    const { data } = await api.get(`/pedidos/${p.id}`);
-    setDetalheItens(data.itens || []);
+    try {
+      const { data } = await api.get(`/pedidos/${p.id}`);
+      setDetalhes(data); // data já contém .itens do backend
+      setDetalheItens(data.itens || []);
+    } catch {
+      setDetalhes(p);
+      setDetalheItens([]);
+    }
   };
 
   const [whatsappPendente, setWhatsappPendente] = useState(null); // { pedido, nomeLoja }

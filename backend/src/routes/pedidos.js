@@ -141,6 +141,10 @@ router.patch('/:id/status', adminMiddleware, async (req, res) => {
 
     const { rows } = await db.query('SELECT * FROM pedidos WHERE id = $1', [req.params.id]);
     const pedido = rows[0] || null;
+    if (pedido) {
+      const { rows: itens } = await db.query('SELECT * FROM itens_pedido WHERE pedido_id = $1', [pedido.id]);
+      pedido.itens = itens;
+    }
 
     const { rows: cfgs } = await db.query(
       "SELECT chave, valor FROM configuracoes WHERE chave IN ('nome_loja','whatsapp')"
