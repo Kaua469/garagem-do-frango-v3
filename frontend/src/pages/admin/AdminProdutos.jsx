@@ -139,7 +139,20 @@ export default function AdminProdutos() {
     setVariacoes(prev => [...prev, { ...novaVariacao, id: `tmp_${Date.now()}` }]);
     setNovaVariacao({ nome: '', preco: '', estoque: '' });
   };
+  
+  const handleVariacaoChange = (id, field, value) => {
+    setVariacoes(prev => prev.map(v => v.id === id ? { ...v, [field]: value } : v));
+  };
+
   const removerVariacao = (id) => setVariacoes(prev => prev.filter(v => v.id !== id));
+
+  // Auto-calcula o estoque total se houver variações
+  useEffect(() => {
+    if (temVariacao && variacoes.length > 0) {
+      const total = variacoes.reduce((acc, curr) => acc + (parseInt(curr.estoque) || 0), 0);
+      reset(prev => ({ ...prev, estoque: total }));
+    }
+  }, [variacoes, temVariacao, reset]);
 
   // ── Filtros ───────────────────────────────────────────────────────────────
   const filtrados = produtos.filter(p => {
@@ -400,10 +413,31 @@ export default function AdminProdutos() {
                     <h4>Variações do produto</h4>
                     {variacoes.map(v => (
                       <div key={v.id} className={styles.varRow}>
-                        <span>{v.nome}</span>
-                        <span>R$ {Number(v.preco).toFixed(2)}</span>
-                        <span>Est: {v.estoque || 0}</span>
-                        <button type="button" onClick={() => removerVariacao(v.id)}>🗑️</button>
+                        <input
+                          className="input-field"
+                          style={{ flex: 2 }}
+                          value={v.nome}
+                          onChange={e => handleVariacaoChange(v.id, 'nome', e.target.value)}
+                          placeholder="Nome"
+                        />
+                        <input
+                          className="input-field"
+                          style={{ flex: 1 }}
+                          type="number"
+                          step="0.01"
+                          value={v.preco}
+                          onChange={e => handleVariacaoChange(v.id, 'preco', e.target.value)}
+                          placeholder="Preço"
+                        />
+                        <input
+                          className="input-field"
+                          style={{ flex: 1 }}
+                          type="number"
+                          value={v.estoque}
+                          onChange={e => handleVariacaoChange(v.id, 'estoque', e.target.value)}
+                          placeholder="Estoque"
+                        />
+                        <button type="button" onClick={() => removerVariacao(v.id)} title="Remover variação">🗑️</button>
                       </div>
                     ))}
                     <div className={styles.novaVar}>

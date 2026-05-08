@@ -56,6 +56,11 @@ router.post('/', async (req, res) => {
           'UPDATE variacoes_produto SET estoque = estoque - $1 WHERE id = $2',
           [item.quantidade, item.variacao_id]
         );
+        // Também decrementa do produto principal para manter o total sincronizado
+        await client.query(
+          'UPDATE produtos SET estoque = estoque - $1 WHERE id = $2',
+          [item.quantidade, item.produto_id]
+        );
       } else {
         await client.query(
           'UPDATE produtos SET estoque = estoque - $1 WHERE id = $2',

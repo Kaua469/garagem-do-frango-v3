@@ -1,6 +1,6 @@
 const express = require('express');
-const router  = express.Router();
-const db      = require('../config/db');
+const router = express.Router();
+const db = require('../config/db');
 const { adminMiddleware } = require('../middleware/auth');
 
 // Helper: busca variações de um produto
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
     const params = [];
     let where = 'WHERE 1=1';
     if (categoria) { params.push(categoria); where += ` AND categoria = $${params.length}`; }
-    if (status)    { params.push(status);    where += ` AND status = $${params.length}`; }
+    if (status) { params.push(status); where += ` AND status = $${params.length}`; }
 
     const { rows: produtos } = await db.query(
       `SELECT * FROM produtos ${where} ORDER BY criado_em DESC`,
@@ -78,7 +78,7 @@ router.post('/', adminMiddleware, async (req, res) => {
 
     // Validação básica para evitar dados corrompidos no banco
     if (!nome || !nome.trim()) return res.status(400).json({ error: 'Nome do produto é obrigatório' });
-    const CATS = ['frangos','marmitas','porcoes','bebidas','sobremesas','combos'];
+    const CATS = ['frangos', 'marmitas', 'porcoes', 'bebidas', 'sobremesas', 'combos'];
     if (!CATS.includes(categoria)) return res.status(400).json({ error: 'Categoria inválida' });
     if (isNaN(parseFloat(preco)) || parseFloat(preco) < 0) return res.status(400).json({ error: 'Preço inválido' });
     if (isNaN(parseInt(estoque)) || parseInt(estoque) < 0) return res.status(400).json({ error: 'Estoque inválido' });
