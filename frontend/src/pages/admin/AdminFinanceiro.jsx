@@ -6,12 +6,15 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const hoje = () => new Date().toISOString().slice(0, 10);
+const mesAtual = () => new Date().toISOString().slice(0, 7);
 
 export default function AdminFinanceiro() {
   const [registros, setRegistros]   = useState([]);
   const [pagamentos, setPagamentos] = useState([]);
   const [loading, setLoading]       = useState(true);
+  const [tipoFiltro, setTipoFiltro] = useState('dia'); // 'dia' ou 'mes'
   const [dataFiltro, setDataFiltro] = useState(hoje);
+  const [mesFiltro, setMesFiltro]   = useState(mesAtual);
   const [saving, setSaving]         = useState(false);
   const [form, setForm] = useState({
     tipo: 'saida',
@@ -23,8 +26,10 @@ export default function AdminFinanceiro() {
 
   const carregar = () => {
     setLoading(true);
+    const params = tipoFiltro === 'dia' ? { dia: dataFiltro } : { mes: mesFiltro };
+    
     Promise.all([
-      api.get('/financeiro', { params: { dia: dataFiltro } }),
+      api.get('/financeiro', { params }),
       api.get('/dashboard').catch(() => ({ data: {} })),
     ]).then(([fin, dash]) => {
       setRegistros(fin.data);
@@ -32,7 +37,7 @@ export default function AdminFinanceiro() {
     }).catch(() => {}).finally(() => setLoading(false));
   };
 
-  useEffect(() => { carregar(); }, [dataFiltro]);
+  useEffect(() => { carregar(); }, [tipoFiltro, dataFiltro, mesFiltro]);
 
   const set = (key, val) => setForm(p => ({ ...p, [key]: val }));
 
@@ -59,13 +64,13 @@ export default function AdminFinanceiro() {
 
   const gerarPDF = () => {
     const doc = new jsPDF();
-    const dataFormatada = formatarData(dataFiltro);
+    const periodo = tipoFiltro === 'dia' ? formatarData(dataFiltro) : mesFiltro;
     
     doc.setFontSize(18);
     doc.text('Relatório Financeiro - Garagem do Frango', 14, 20);
     doc.setFontSize(12);
-    doc.text(`Data: ${dataFormatada}`, 14, 30);
-    doc.text(`Saldo do Dia: R$ ${saldo.toFixed(2)}`, 14, 38);
+    doc.text(`Período: ${periodo}`, 14, 30);
+    doc.text(`Saldo do Período: R$ ${saldo.toFixed(2)}`, 14, 38);
 
     const body = registros.map(r => [
       formatarData(r.data),
@@ -82,7 +87,7 @@ export default function AdminFinanceiro() {
       headStyles: { fillColor: [231, 76, 60] }, // Vermelho frango
     });
 
-    doc.save(`financeiro_${dataFiltro}.pdf`);
+    doc.save(`financeiro_${periodo.replace('/', '-')}.pdf`);
   };
 
   return (
@@ -90,19 +95,47 @@ export default function AdminFinanceiro() {
       <div className={styles.headerRow}>
         <h1 className={styles.pageTitle}>💰 Financeiro</h1>
         <button className={styles.pdfBtn} onClick={gerarPDF} disabled={registros.length === 0}>
-          📄 Gerar PDF
+          📄 Gerar PDF ({tipoFiltro === 'dia' ? 'Dia' : 'Mês'})
         </button>
       </div>
 
-      {/* Filtro de data */}
-      <div className={styles.mesRow}>
-        <label className={styles.mesLabel}>Filtrar por dia:</label>
-        <input
-          type="date"
-          value={dataFiltro}
-          onChange={e => setDataFiltro(e.target.value)}
-          className={`input-field ${styles.mesInput}`}
-        />
+      {/* Filtros */}
+      <div className={styles.filterContainer}>
+        <div className={styles.filterTabs}>
+          <button 
+            className={`${styles.filterTab} ${tipoFiltro === 'dia' ? styles.tabActive : ''}`}
+            onClick={() => setTipoFiltro('dia')}
+          >
+            Por Dia
+          </button>
+          <button 
+            className={`${styles.filterTab} ${tipoFiltro === 'mes' ? styles.tabActive : ''}`}
+            onClick={() => setTipoFiltro('mes')}
+          >
+            Por Mês
+          </button>
+        </div>
+
+        <div className={styles.mesRow}>
+          <label className={styles.mesLabel}>
+            {tipoFiltro === 'dia' ? 'Selecionar dia:' : 'Selecionar mês:'}
+          </label>
+          {tipoFiltro === 'dia' ? (
+            <input
+              type="date"
+              value={dataFiltro}
+              onChange={e => setDataFiltro(e.target.value)}
+              className={`input-field ${styles.mesInput}`}
+            />
+          ) : (
+            <input
+              type="month"
+              value={mesFiltro}
+              onChange={e => setMesFiltro(e.target.value)}
+              className={`input-field ${styles.mesInput}`}
+            />
+          )}
+        </div>
       </div>
 
       {/* Cards resumo */}

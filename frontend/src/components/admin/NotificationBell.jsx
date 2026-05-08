@@ -6,7 +6,7 @@ import styles from './NotificationBell.module.css';
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
-  const { notificacoes, naoLidas, marcarLida, marcarTodasLidas } = useNotification();
+  const { notificacoes, naoLidas, marcarLida, marcarTodasLidas, permitirSom } = useNotification();
 
   const tipoIcon = { novo_pedido: '🍗', estoque_baixo: '⚠️', produto_indisponivel: '🚫' };
   const tipoLabel = { novo_pedido: 'Novo Pedido', estoque_baixo: 'Estoque Baixo', produto_indisponivel: 'Produto Indisponível' };
@@ -37,7 +37,12 @@ export default function NotificationBell() {
             transition={{ duration: 0.18 }}
           >
             <div className={styles.panelHeader}>
-              <span className={styles.panelTitle}>Notificações</span>
+              <div className={styles.titleRow}>
+                <span className={styles.panelTitle}>Notificações</span>
+                <button className={styles.audioBtn} onClick={permitirSom} title="Testar/Ativar som">
+                  🔊 Ativar Som
+                </button>
+              </div>
               {naoLidas > 0 && (
                 <button className={styles.markAll} onClick={marcarTodasLidas}>
                   Marcar todas como lidas

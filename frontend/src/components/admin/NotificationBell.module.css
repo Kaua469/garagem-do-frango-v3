@@ -46,18 +46,41 @@
 
 .panelHeader {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
   padding: 16px 20px;
   border-bottom: 1px solid #f0e6da;
 }
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .panelTitle { font-weight: 800; font-size: 1rem; color: var(--text); }
+.audioBtn {
+  background: #f0fff4;
+  border: 1px solid #2d9b3f;
+  color: #2d9b3f;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.audioBtn:hover {
+  background: #2d9b3f;
+  color: white;
+}
 .markAll {
   font-size: 0.78rem;
   color: var(--primary);
   font-weight: 700;
   background: none;
   cursor: pointer;
+  text-align: left;
+  padding: 0;
+  border: none;
 }
 
 .list { max-height: 380px; overflow-y: auto; }
