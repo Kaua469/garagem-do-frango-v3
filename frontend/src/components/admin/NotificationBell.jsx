@@ -6,7 +6,7 @@ import styles from './NotificationBell.module.css';
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
-  const { notificacoes, naoLidas, marcarLida, marcarTodasLidas, permitirSom } = useNotification();
+  const { notificacoes, naoLidas, marcarLida, marcarTodasLidas, permitirSom, conectado } = useNotification();
 
   const tipoIcon = { novo_pedido: '🍗', estoque_baixo: '⚠️', produto_indisponivel: '🚫' };
   const tipoLabel = { novo_pedido: 'Novo Pedido', estoque_baixo: 'Estoque Baixo', produto_indisponivel: 'Produto Indisponível' };
@@ -15,6 +15,7 @@ export default function NotificationBell() {
     <div className={styles.wrapper}>
       <button className={styles.bell} onClick={() => setOpen(!open)} aria-label="Notificações">
         🔔
+        <div className={`${styles.statusDot} ${conectado ? styles.online : styles.offline}`} title={conectado ? 'Conectado ao servidor' : 'Desconectado'} />
         {naoLidas > 0 && (
           <motion.span
             className={styles.badge}

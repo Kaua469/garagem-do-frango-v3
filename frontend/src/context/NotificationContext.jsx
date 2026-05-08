@@ -9,31 +9,40 @@ export function NotificationProvider({ children }) {
   const [notificacoes, setNotificacoes] = useState([]);
   const [naoLidas, setNaoLidas] = useState(0);
   const [toasts, setToasts] = useState([]);
+  const [conectado, setConectado] = useState(false);
   const socketRef = useRef(null);
   const audioRef = useRef(null);
 
   useEffect(() => {
     if (usuario?.tipo !== 'dona') return;
 
-    // Tenta encontrar a URL do socket automaticamente se não estiver no .env
-    const fallbackUrl = window.location.origin.replace('frontend', 'backend').replace('3000', '3000');
-    const socketUrl = import.meta.env.VITE_SOCKET_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000' : '');
+    // Descobre a URL do socket baseada na URL da API
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || apiUrl.replace('/api', '') || 'http://localhost:3000';
     
-    console.log('🔌 Tentando conectar socket em:', socketUrl || 'URL Padrão');
+    console.log('🔌 Conectando Socket em:', socketUrl);
 
     const socket = io(socketUrl, {
       withCredentials: true,
-      transports: ['websocket', 'polling'] // Tenta websocket primeiro
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5,
     });
     socketRef.current = socket;
 
     socket.on('connect', () => {
-      console.log('✅ Socket conectado com sucesso!');
+      console.log('✅ Socket conectado!');
+      setConectado(true);
       socket.emit('entrar-admin');
     });
 
+    socket.on('disconnect', () => {
+      console.warn('❌ Socket desconectado!');
+      setConectado(false);
+    });
+
     socket.on('connect_error', (err) => {
-      console.error('❌ Erro de conexão no Socket:', err.message);
+      console.error('❌ Erro de conexão Socket:', err.message);
+      setConectado(false);
     });
 
     socket.on('novo-pedido', (dados) => {
@@ -154,7 +163,8 @@ export function NotificationProvider({ children }) {
       marcarLida, 
       marcarTodasLidas, 
       removerToast,
-      permitirSom 
+      permitirSom,
+      conectado
     }}>
       {children}
     </NotificationContext.Provider>

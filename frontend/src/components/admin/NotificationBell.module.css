@@ -32,6 +32,18 @@
   padding: 0 4px;
 }
 
+.statusDot {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.online { background: #2d9b3f; box-shadow: 0 0 5px #2d9b3f; }
+.offline { background: #e53e3e; box-shadow: 0 0 5px #e53e3e; }
+
 .panel {
   position: absolute;
   right: 0;
