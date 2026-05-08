@@ -3,29 +3,29 @@ import axios from 'axios';
 const nomeLoja = 'Garagem do Frango';
 
 const STATUS_CONFIG = {
-  aguardando:   { emoji: '', texto: 'Aguardando confirmacao' },
-  confirmado:   { emoji: '', texto: 'Confirmado! Estamos separando seu pedido' },
-  preparando:   { emoji: '', texto: 'Na cozinha! Seu pedido esta sendo preparado' },
-  saiu_entrega: { emoji: '', texto: 'Saiu para entrega! Ja chega ai' },
-  entregue:     { emoji: '', texto: 'Entregue! Bom apetite!' },
-  cancelado:    { emoji: '', texto: 'Pedido cancelado' },
+  aguardando:   { emoji: '⏳', texto: 'Aguardando confirmação' },
+  confirmado:   { emoji: '✅', texto: 'Confirmado! Estamos separando seu pedido' },
+  preparando:   { emoji: '👨‍🍳', texto: 'Na cozinha! Seu pedido está sendo preparado' },
+  saiu_entrega: { emoji: '🛵', texto: 'Saiu para entrega! Já chega aí' },
+  entregue:     { emoji: '🎉', texto: 'Entregue! Bom apetite!' },
+  cancelado:    { emoji: '❌', texto: 'Pedido cancelado' },
 };
 
 function montarMensagem(pedido, nomeLoja = 'Garagem do Frango') {
-  const cfg   = STATUS_CONFIG[pedido.status] || { emoji: '', texto: pedido.status };
+  const cfg   = STATUS_CONFIG[pedido.status] || { emoji: '📦', texto: pedido.status };
   const total = `R$ ${Number(pedido.total).toFixed(2).replace('.', ',')}`;
 
   const linhas = [
-    `*${nomeLoja}*`,
+    `${cfg.emoji} *${nomeLoja}*`,
     '',
-    `Ola, *${pedido.nome_cliente}*!`,
+    `Olá, *${pedido.nome_cliente}*! 👋`,
     '',
-    `Atualizacao do seu pedido *#${pedido.numero}*:`,
+    `Atualização do seu pedido *#${pedido.numero}*:`,
     '',
-    `Status: ${cfg.texto}`,
-    `Total: ${total}`,
+    `📌 *Status:* ${cfg.emoji} ${cfg.texto}`,
+    `💰 *Total:* ${total}`,
     '',
-    'Garagem do Frango -- Feito com amor!'
+    '🍗 Garagem do Frango — Feito com amor!'
   ];
 
   return linhas.join('\n');
@@ -66,6 +66,7 @@ export async function enviarWhatsAppAutomatico(pedido, nomeLoja = 'Garagem do Fr
   if (!fone) return false;
   if (!fone.startsWith('55')) fone = '55' + fone;
 
+  // Monta a mensagem e envia como JSON puro
   const mensagem = montarMensagem(pedido, nomeLoja);
 
   try {
