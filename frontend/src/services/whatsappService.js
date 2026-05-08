@@ -3,12 +3,12 @@ import axios from 'axios';
 const nomeLoja = 'Garagem do Frango';
 
 const STATUS_CONFIG = {
-  aguardando:   { texto: '⏳ Aguardando confirmação' },
-  confirmado:   { texto: '✅ Confirmado! Estamos separando seu pedido' },
-  preparando:   { texto: '👨‍🍳 Na cozinha! Seu pedido está sendo preparado' },
-  saiu_entrega: { texto: '🛵 Saiu para entrega! O motoboy já está a caminho' },
-  entregue:     { texto: '🎉 Entregue! Bom apetite!' },
-  cancelado:    { texto: '❌ Pedido cancelado' },
+  aguardando:   { texto: 'Aguardando confirmacao' },
+  confirmado:   { texto: 'Confirmado! Estamos separando seu pedido' },
+  preparando:   { texto: 'Na cozinha! Seu pedido esta sendo preparado' },
+  saiu_entrega: { texto: 'Saiu para entrega! O motoboy ja esta a caminho' },
+  entregue:     { texto: 'Entregue! Bom apetite!' },
+  cancelado:    { texto: 'Pedido cancelado' },
 };
 
 function montarMensagem(pedido, nomeLoja = 'Garagem do Frango') {
@@ -23,24 +23,24 @@ function montarMensagem(pedido, nomeLoja = 'Garagem do Frango') {
   }).join('\n');
 
   const linhas = [
-    `*${nomeLoja}* 🍗`,
+    `*${nomeLoja}*`,
     '',
     `Olá, *${pedido.nome_cliente}*!`,
     `Atualização do seu pedido *#${pedido.numero}*:`,
     '',
-    `📍 *Status: ${cfg.texto}*`,
+    `*Status: ${cfg.texto}*`,
     '----------------------------------',
     '',
-    `📦 *Itens do pedido:*`,
+    `*Itens do pedido:*`,
     itensTexto,
     '',
-    `💵 *Resumo:*`,
+    `*Resumo:*`,
     `Subtotal: ${subtotal}`,
     `Taxa de entrega: ${taxa}`,
     `*Total: ${total}*`,
     '',
-    `💳 *Pagamento:* ${pedido.forma_pagamento}${pedido.tipo_cartao ? ` (${pedido.tipo_cartao})` : ''}`,
-    `📍 *Entrega:* ${pedido.endereco_entrega}`,
+    `*Pagamento:* ${pedido.forma_pagamento}${pedido.tipo_cartao ? ` (${pedido.tipo_cartao})` : ''}`,
+    `*Entrega:* ${pedido.endereco_entrega}`,
     '',
     '----------------------------------',
     '_Garagem do Frango -- Feito com amor!_'
