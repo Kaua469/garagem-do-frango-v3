@@ -6,10 +6,14 @@ const { adminMiddleware } = require('../middleware/auth');
 // GET /api/financeiro (admin)
 router.get('/', adminMiddleware, async (req, res) => {
   try {
-    const { mes } = req.query;
+    const { mes, dia } = req.query;
     const params  = [];
     let where = '';
-    if (mes) {
+
+    if (dia) {
+      params.push(dia);
+      where = `WHERE data::date = $${params.length}`;
+    } else if (mes) {
       params.push(mes);
       where = `WHERE TO_CHAR(data,'YYYY-MM') = $${params.length}`;
     }

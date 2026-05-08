@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { formatarData } from '../../services/dateUtils';
 import styles from './AdminFinanceiro.module.css';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const hoje = () => new Date().toISOString().slice(0, 10);
-const mesAtual = () => new Date().toISOString().slice(0, 7);
 
 export default function AdminFinanceiro() {
   const [registros, setRegistros]   = useState([]);
   const [pagamentos, setPagamentos] = useState([]);
   const [loading, setLoading]       = useState(true);
-  const [mes, setMes]               = useState(mesAtual);
+  const [dataFiltro, setDataFiltro] = useState(hoje);
   const [saving, setSaving]         = useState(false);
   const [form, setForm] = useState({
     tipo: 'saida',
@@ -23,7 +24,7 @@ export default function AdminFinanceiro() {
   const carregar = () => {
     setLoading(true);
     Promise.all([
-      api.get('/financeiro', { params: { mes } }),
+      api.get('/financeiro', { params: { dia: dataFiltro } }),
       api.get('/dashboard').catch(() => ({ data: {} })),
     ]).then(([fin, dash]) => {
       setRegistros(fin.data);
@@ -31,7 +32,7 @@ export default function AdminFinanceiro() {
     }).catch(() => {}).finally(() => setLoading(false));
   };
 
-  useEffect(() => { carregar(); }, [mes]);
+  useEffect(() => { carregar(); }, [dataFiltro]);
 
   const set = (key, val) => setForm(p => ({ ...p, [key]: val }));
 
@@ -56,17 +57,50 @@ export default function AdminFinanceiro() {
   const totalSaidas   = registros.filter(r => r.tipo === 'saida').reduce((a, r) => a + Number(r.valor), 0);
   const saldo         = totalEntradas - totalSaidas;
 
+  const gerarPDF = () => {
+    const doc = new jsPDF();
+    const dataFormatada = formatarData(dataFiltro);
+    
+    doc.setFontSize(18);
+    doc.text('Relatório Financeiro - Garagem do Frango', 14, 20);
+    doc.setFontSize(12);
+    doc.text(`Data: ${dataFormatada}`, 14, 30);
+    doc.text(`Saldo do Dia: R$ ${saldo.toFixed(2)}`, 14, 38);
+
+    const body = registros.map(r => [
+      formatarData(r.data),
+      r.tipo === 'entrada' ? 'Entrada' : 'Saída',
+      r.categoria || 'Geral',
+      r.descricao,
+      `R$ ${Number(r.valor).toFixed(2)}`
+    ]);
+
+    autoTable(doc, {
+      startY: 45,
+      head: [['Data', 'Tipo', 'Categoria', 'Descrição', 'Valor']],
+      body: body,
+      headStyles: { fillColor: [231, 76, 60] }, // Vermelho frango
+    });
+
+    doc.save(`financeiro_${dataFiltro}.pdf`);
+  };
+
   return (
     <div>
-      <h1 className={styles.pageTitle}>💰 Financeiro</h1>
+      <div className={styles.headerRow}>
+        <h1 className={styles.pageTitle}>💰 Financeiro</h1>
+        <button className={styles.pdfBtn} onClick={gerarPDF} disabled={registros.length === 0}>
+          📄 Gerar PDF
+        </button>
+      </div>
 
-      {/* Filtro de mês */}
+      {/* Filtro de data */}
       <div className={styles.mesRow}>
-        <label className={styles.mesLabel}>Mês de referência:</label>
+        <label className={styles.mesLabel}>Filtrar por dia:</label>
         <input
-          type="month"
-          value={mes}
-          onChange={e => setMes(e.target.value)}
+          type="date"
+          value={dataFiltro}
+          onChange={e => setDataFiltro(e.target.value)}
           className={`input-field ${styles.mesInput}`}
         />
       </div>
@@ -212,7 +246,7 @@ export default function AdminFinanceiro() {
               {registros.length === 0 && (
                 <tr>
                   <td colSpan={5} className={styles.emptyCell}>
-                    Nenhum lançamento em {mes}.
+                    Nenhum lançamento em {formatarData(dataFiltro)}.
                   </td>
                 </tr>
               )}
