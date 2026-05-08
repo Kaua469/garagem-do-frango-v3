@@ -50,3 +50,26 @@
 }
 .feedbackSuccess h3 { color: #2d9b3f; margin-bottom: 8px; }
 .feedbackSuccess p { color: #2f855a; font-size: 0.94rem; }
+
+/* Profile Section */
+.profileBox {
+  margin-bottom: 40px;
+  background: #fdfaf5;
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px dashed #e2d1c3;
+}
+.profileActions { display: flex; gap: 12px; flex-wrap: wrap; }
+.editSection {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  overflow: hidden;
+}
+.editSection label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary); }
+
+.passGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}

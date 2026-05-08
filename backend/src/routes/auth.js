@@ -107,4 +107,45 @@ router.post('/primeiro-acesso', authMiddleware, async (req, res) => {
   }
 });
 
+// PATCH /api/auth/perfil
+router.patch('/perfil', authMiddleware, async (req, res) => {
+  try {
+    const { telefone, senha_atual, nova_senha } = req.body;
+    const usuarioId = req.usuario.id;
+
+    // 1. Atualização de Senha
+    if (nova_senha) {
+      if (!senha_atual) return res.status(400).json({ error: 'Senha atual é necessária para mudar a senha' });
+      
+      const { rows } = await db.query('SELECT senha FROM usuarios WHERE id = $1', [usuarioId]);
+      const ok = await bcrypt.compare(senha_atual, rows[0].senha);
+      if (!ok) return res.status(401).json({ error: 'Senha atual incorreta' });
+
+      if (nova_senha.length < 6) return res.status(400).json({ error: 'A nova senha deve ter no mínimo 6 caracteres' });
+
+      const hash = await bcrypt.hash(nova_senha, 10);
+      await db.query('UPDATE usuarios SET senha = $1 WHERE id = $2', [hash, usuarioId]);
+    }
+
+    // 2. Atualização de Telefone
+    if (telefone) {
+      const foneLimpo = telefone.replace(/\D/g, '');
+      if (foneLimpo.length < 10) return res.status(400).json({ error: 'Telefone inválido' });
+
+      const { rows: exist } = await db.query(
+        'SELECT id FROM usuarios WHERE telefone = $1 AND id != $2',
+        [foneLimpo, usuarioId]
+      );
+      if (exist.length) return res.status(409).json({ error: 'Este telefone já está sendo usado por outra conta' });
+      
+      await db.query('UPDATE usuarios SET telefone = $1 WHERE id = $2', [foneLimpo, usuarioId]);
+    }
+
+    res.json({ message: 'Dados atualizados com sucesso!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao atualizar perfil' });
+  }
+});
+
 module.exports = router;

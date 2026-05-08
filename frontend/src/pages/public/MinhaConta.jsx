@@ -41,6 +41,9 @@ export default function MinhaConta() {
             <button onClick={logout} className="btn-outline">Sair</button>
           </div>
 
+          {/* ── SEÇÃO DE PERFIL / SEGURANÇA ── */}
+          <ProfileSection usuario={usuario} />
+
           <h2 className={styles.secTitle}>Meus Pedidos</h2>
 
           {loading ? (
@@ -141,6 +144,113 @@ function FeedbackSection({ usuario }) {
       >
         {loading ? 'Enviando...' : 'Enviar Feedback'}
       </button>
+    </div>
+  );
+}
+
+function ProfileSection({ usuario }) {
+  const [showPhone, setShowPhone] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  const [phone, setPhone] = useState(usuario.telefone);
+  const [passForm, setPassForm] = useState({ atual: '', nova: '', confirma: '' });
+
+  const salvarTelefone = async () => {
+    setLoading(true);
+    try {
+      await api.patch('/auth/perfil', { telefone: phone });
+      alert('Telefone atualizado! Entre novamente para aplicar as mudanças.');
+      window.location.reload();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Erro ao atualizar telefone');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const salvarSenha = async () => {
+    if (passForm.nova !== passForm.confirma) return alert('As senhas não conferem');
+    setLoading(true);
+    try {
+      await api.patch('/auth/perfil', { 
+        senha_atual: passForm.atual, 
+        nova_senha: passForm.nova 
+      });
+      alert('Senha atualizada com sucesso!');
+      setShowPass(false);
+      setPassForm({ atual: '', nova: '', confirma: '' });
+    } catch (err) {
+      alert(err.response?.data?.error || 'Erro ao atualizar senha');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.profileBox}>
+      <div className={styles.profileActions}>
+        <button className="btn-outline" onClick={() => setShowPhone(!showPhone)}>
+          📱 Alterar Telefone
+        </button>
+        <button className="btn-outline" onClick={() => setShowPass(!showPass)}>
+          🔑 Alterar Senha
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {showPhone && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className={styles.editSection}>
+            <label>Novo Telefone</label>
+            <input 
+              className="input-field" 
+              value={phone} 
+              onChange={e => setPhone(e.target.value)}
+              placeholder="Ex: 11999999999"
+            />
+            <button className="btn-primary" onClick={salvarTelefone} disabled={loading} style={{ marginTop: 10 }}>
+              {loading ? 'Salvando...' : 'Salvar Novo Telefone'}
+            </button>
+          </motion.div>
+        )}
+
+        {showPass && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className={styles.editSection}>
+            <div className={styles.passGrid}>
+              <div>
+                <label>Senha Atual</label>
+                <input 
+                  type="password" 
+                  className="input-field" 
+                  value={passForm.atual} 
+                  onChange={e => setPassForm(p => ({...p, atual: e.target.value}))}
+                />
+              </div>
+              <div>
+                <label>Nova Senha</label>
+                <input 
+                  type="password" 
+                  className="input-field" 
+                  value={passForm.nova} 
+                  onChange={e => setPassForm(p => ({...p, nova: e.target.value}))}
+                />
+              </div>
+              <div>
+                <label>Confirmar Nova Senha</label>
+                <input 
+                  type="password" 
+                  className="input-field" 
+                  value={passForm.confirma} 
+                  onChange={e => setPassForm(p => ({...p, confirma: e.target.value}))}
+                />
+              </div>
+            </div>
+            <button className="btn-primary" onClick={salvarSenha} disabled={loading} style={{ marginTop: 15, width: '100%' }}>
+              {loading ? 'Atualizando...' : 'Atualizar Senha'}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
