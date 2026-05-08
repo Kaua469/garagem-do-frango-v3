@@ -31,6 +31,18 @@ function montarMensagem(pedido, nomeLoja = 'Garagem do Frango') {
   return linhas.join('\n');
 }
 
+// Função para converter emojis em códigos Unicode que a API aceita sem erro
+function escaparParaUnicode(str) {
+  return str.split('').map(char => {
+    const code = char.charCodeAt(0);
+    // Se for um caractere especial (emoji ou símbolo complexo), escapa para \uXXXX
+    if (code > 127) {
+      return '\\u' + code.toString(16).toUpperCase().padStart(4, '0');
+    }
+    return char;
+  }).join('');
+}
+
 export function gerarLinkWhatsApp(pedido, nomeLoja = 'Garagem do Frango') {
   let fone = String(pedido.telefone_cliente || '').replace(/\D/g, '');
   if (!fone) return null;
@@ -66,14 +78,27 @@ export async function enviarWhatsAppAutomatico(pedido, nomeLoja = 'Garagem do Fr
   if (!fone) return false;
   if (!fone.startsWith('55')) fone = '55' + fone;
 
-  // Monta a mensagem e envia como JSON puro
-  const mensagem = montarMensagem(pedido, nomeLoja);
+  const mensagemPura = montarMensagem(pedido, nomeLoja);
+  
+  // Transformamos a mensagem em uma string "segura" onde emojis viram códigos
+  // Ex: 🍗 vira \uD83C\uDF57
+  const mensagemSegura = mensagemPura.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]/g, (char) => {
+    return "\\u" + char.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0') +
+           (char.length > 1 ? "\\u" + char.charCodeAt(1).toString(16).toUpperCase().padStart(4, '0') : "");
+  });
 
   try {
     const { data } = await axios.post(
       `https://api.z-api.io/instances/${instance}/token/${token}/send-text`,
-      { phone: fone, message: mensagem },
-      { headers: { 'Content-Type': 'application/json' } }
+      { 
+        phone: fone, 
+        message: mensagemSegura 
+      },
+      { 
+        headers: { 
+          'Content-Type': 'application/json'
+        } 
+      }
     );
     return !!data;
   } catch (err) {
