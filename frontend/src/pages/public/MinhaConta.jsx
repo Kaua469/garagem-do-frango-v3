@@ -67,9 +67,80 @@ export default function MinhaConta() {
               ))}
             </div>
           )}
+
+          {/* ── SEÇÃO DE FEEDBACK ── */}
+          <FeedbackSection usuario={usuario} />
         </div>
       </main>
       <Footer />
     </>
+  );
+}
+
+function FeedbackSection({ usuario }) {
+  const [form, setForm] = useState({ nota: 5, comentario: '' });
+  const [enviado, setEnviado] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const enviar = async () => {
+    if (!form.comentario.trim()) return alert('Escreva um comentário antes de enviar.');
+    setLoading(true);
+    try {
+      await api.post('/avaliacoes/public', {
+        nome: usuario.nome,
+        nota: form.nota,
+        comentario: form.comentario
+      });
+      setEnviado(true);
+    } catch {
+      alert('Erro ao enviar feedback. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (enviado) {
+    return (
+      <div className={styles.feedbackSuccess}>
+        <h3>🎉 Obrigado pelo feedback!</h3>
+        <p>Sua avaliação foi enviada com sucesso e será revisada pela nossa equipe.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.feedbackBox}>
+      <h2 className={styles.secTitle}>O que está achando da Garagem? ⭐</h2>
+      <p className={styles.feedbackSub}>Sua opinião é muito importante para nós!</p>
+      
+      <div className={styles.ratingRow}>
+        {[1, 2, 3, 4, 5].map(n => (
+          <button 
+            key={n} 
+            className={`${styles.starBtn} ${form.nota >= n ? styles.starActive : ''}`}
+            onClick={() => setForm(p => ({ ...p, nota: n }))}
+          >
+            ⭐
+          </button>
+        ))}
+      </div>
+
+      <textarea
+        className={`input-field ${styles.feedbackArea}`}
+        placeholder="Conte-nos como foi sua experiência..."
+        value={form.comentario}
+        onChange={e => setForm(p => ({ ...p, comentario: e.target.value }))}
+        rows={3}
+      />
+
+      <button 
+        className="btn-primary" 
+        onClick={enviar} 
+        disabled={loading}
+        style={{ width: '100%', marginTop: 14 }}
+      >
+        {loading ? 'Enviando...' : 'Enviar Feedback'}
+      </button>
+    </div>
   );
 }

@@ -21,6 +21,21 @@ router.get('/todas', adminMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: 'Erro' }); }
 });
 
+// POST público — enviado pelo cliente
+router.post('/public', async (req, res) => {
+  try {
+    const { nome, nota, comentario } = req.body;
+    if (!nome || !comentario)
+      return res.status(400).json({ error: 'Nome e comentário obrigatórios' });
+    
+    const { rows } = await db.query(
+      'INSERT INTO avaliacoes (nome, nota, comentario, ativo) VALUES ($1,$2,$3,FALSE) RETURNING id',
+      [nome, nota || 5, comentario]
+    );
+    res.status(201).json({ id: rows[0].id, message: 'Feedback enviado com sucesso!' });
+  } catch (err) { res.status(500).json({ error: 'Erro ao enviar feedback' }); }
+});
+
 // POST — criar (admin)
 router.post('/', adminMiddleware, async (req, res) => {
   try {

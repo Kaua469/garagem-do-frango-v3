@@ -16,3 +16,37 @@
 .pedidoStatus { font-size: 0.88rem; font-weight: 700; color: var(--primary); }
 .pedidoInfo { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-secondary); }
 .pedidoTotal { font-weight: 900; color: var(--text); }
+
+/* Feedback */
+.feedbackBox {
+  margin-top: 48px;
+  background: white;
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  border: 1px solid #f0e6da;
+}
+.feedbackSub { color: var(--text-secondary); margin-bottom: 20px; font-size: 0.94rem; }
+.ratingRow { display: flex; gap: 8px; margin-bottom: 20px; }
+.starBtn { 
+  background: none; 
+  border: none; 
+  font-size: 2rem; 
+  cursor: pointer; 
+  filter: grayscale(1); 
+  transition: transform 0.1s, filter 0.1s;
+}
+.starBtn:hover { transform: scale(1.1); }
+.starActive { filter: grayscale(0); }
+.feedbackArea { width: 100%; resize: none; margin-top: 8px; padding: 12px; }
+
+.feedbackSuccess {
+  margin-top: 48px;
+  background: #f0fff4;
+  border-radius: var(--radius);
+  padding: 32px;
+  text-align: center;
+  border: 1px solid #c6f6d5;
+}
+.feedbackSuccess h3 { color: #2d9b3f; margin-bottom: 8px; }
+.feedbackSuccess p { color: #2f855a; font-size: 0.94rem; }
