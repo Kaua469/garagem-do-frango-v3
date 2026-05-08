@@ -7,19 +7,28 @@ import Footer from '../../components/public/Footer';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import styles from './AuthPages.module.css';
+import { maskTelefone, unmaskTelefone, validarSenha } from '../../services/maskUtils';
 
 export default function Cadastro() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [erro, setErro] = useState('');
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
     setErro('');
     if (data.senha !== data.confirmar) { setErro('Senhas não conferem'); return; }
+    
+    // Remove a máscara antes de enviar
+    const telefoneLimpo = unmaskTelefone(data.telefone);
+    
     try {
-      await api.post('/auth/cadastro', { nome: data.nome, telefone: data.telefone, senha: data.senha });
-      await login(data.telefone, data.senha);
+      await api.post('/auth/cadastro', { 
+        nome: data.nome, 
+        telefone: telefoneLimpo, 
+        senha: data.senha 
+      });
+      await login(telefoneLimpo, data.senha);
       navigate('/minha-conta');
     } catch (err) {
       setErro(err.response?.data?.error || 'Erro ao cadastrar');
@@ -46,12 +55,32 @@ export default function Cadastro() {
               </div>
               <div className={styles.field}>
                 <label>Telefone</label>
-                <input className="input-field" placeholder="16999999999" {...register('telefone', { required: 'Obrigatório' })} />
+                <input 
+                  className="input-field" 
+                  placeholder="(16) 99999-9999" 
+                  {...register('telefone', { 
+                    required: 'Obrigatório',
+                    minLength: { value: 14, message: 'Telefone inválido' }
+                  })} 
+                  onChange={(e) => {
+                    const masked = maskTelefone(e.target.value);
+                    setValue('telefone', masked);
+                  }}
+                />
                 {errors.telefone && <span className={styles.err}>{errors.telefone.message}</span>}
               </div>
               <div className={styles.field}>
                 <label>Senha</label>
-                <input className="input-field" type="password" placeholder="Mínimo 8 caracteres" {...register('senha', { required: 'Obrigatório', minLength: { value: 8, message: 'Mínimo 8 caracteres' } })} />
+                <input 
+                  className="input-field" 
+                  type="password" 
+                  placeholder="Maiúscula, minúscula e número" 
+                  {...register('senha', { 
+                    required: 'Obrigatório', 
+                    minLength: { value: 8, message: 'Mínimo 8 caracteres' },
+                    validate: validarSenha
+                  })} 
+                />
                 {errors.senha && <span className={styles.err}>{errors.senha.message}</span>}
               </div>
               <div className={styles.field}>

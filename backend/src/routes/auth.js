@@ -5,12 +5,23 @@ const jwt     = require('jsonwebtoken');
 const db      = require('../config/db');
 const { authMiddleware } = require('../middleware/auth');
 
+// Validação de Senha: Maiúscula, Minúscula e Número
+function validarSenha(senha) {
+  const temMaiuscula = /[A-Z]/.test(senha);
+  const temMinuscula = /[a-z]/.test(senha);
+  const temNumero    = /[0-9]/.test(senha);
+  return temMaiuscula && temMinuscula && temNumero;
+}
+
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
-    const { telefone, senha } = req.body;
+    let { telefone, senha } = req.body;
     if (!telefone || !senha)
       return res.status(400).json({ error: 'Telefone e senha são obrigatórios' });
+
+    // Limpa telefone caso venha com máscara
+    telefone = telefone.replace(/\D/g, '');
 
     const { rows } = await db.query(
       'SELECT * FROM usuarios WHERE telefone = $1 AND ativo = TRUE',
@@ -47,9 +58,16 @@ router.post('/login', async (req, res) => {
 // POST /api/auth/cadastro
 router.post('/cadastro', async (req, res) => {
   try {
-    const { nome, telefone, senha } = req.body;
+    let { nome, telefone, senha } = req.body;
     if (!nome || !telefone || !senha)
       return res.status(400).json({ error: 'Campos obrigatórios faltando' });
+
+    // Validação de senha
+    if (senha.length < 8) return res.status(400).json({ error: 'Mínimo 8 caracteres na senha' });
+    if (!validarSenha(senha)) return res.status(400).json({ error: 'A senha deve conter maiúscula, minúscula e número' });
+
+    // Limpa telefone
+    telefone = telefone.replace(/\D/g, '');
 
     const { rows: exist } = await db.query(
       'SELECT id FROM usuarios WHERE telefone = $1',
@@ -80,13 +98,18 @@ router.get('/me', authMiddleware, (req, res) => {
 // POST /api/auth/primeiro-acesso
 router.post('/primeiro-acesso', authMiddleware, async (req, res) => {
   try {
-    const { novo_telefone, nova_senha, confirmar_senha } = req.body;
+    let { novo_telefone, nova_senha, confirmar_senha } = req.body;
     if (!novo_telefone || !nova_senha || !confirmar_senha)
       return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     if (nova_senha !== confirmar_senha)
       return res.status(400).json({ error: 'Senhas não conferem' });
     if (nova_senha.length < 8)
       return res.status(400).json({ error: 'Senha deve ter no mínimo 8 caracteres' });
+    if (!validarSenha(nova_senha))
+      return res.status(400).json({ error: 'A nova senha deve conter maiúscula, minúscula e número' });
+
+    // Limpa telefone
+    novo_telefone = novo_telefone.replace(/\D/g, '');
 
     const { rows: exist } = await db.query(
       'SELECT id FROM usuarios WHERE telefone = $1 AND id != $2',
@@ -110,7 +133,7 @@ router.post('/primeiro-acesso', authMiddleware, async (req, res) => {
 // PATCH /api/auth/perfil
 router.patch('/perfil', authMiddleware, async (req, res) => {
   try {
-    const { telefone, senha_atual, nova_senha } = req.body;
+    let { telefone, senha_atual, nova_senha } = req.body;
     const usuarioId = req.usuario.id;
 
     // 1. Atualização de Senha
@@ -121,7 +144,8 @@ router.patch('/perfil', authMiddleware, async (req, res) => {
       const ok = await bcrypt.compare(senha_atual, rows[0].senha);
       if (!ok) return res.status(401).json({ error: 'Senha atual incorreta' });
 
-      if (nova_senha.length < 6) return res.status(400).json({ error: 'A nova senha deve ter no mínimo 6 caracteres' });
+      if (nova_senha.length < 8) return res.status(400).json({ error: 'A nova senha deve ter no mínimo 8 caracteres' });
+      if (!validarSenha(nova_senha)) return res.status(400).json({ error: 'A nova senha deve conter maiúscula, minúscula e número' });
 
       const hash = await bcrypt.hash(nova_senha, 10);
       await db.query('UPDATE usuarios SET senha = $1 WHERE id = $2', [hash, usuarioId]);

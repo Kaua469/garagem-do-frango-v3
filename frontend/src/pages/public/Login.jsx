@@ -9,18 +9,20 @@ import { useAuth } from '../../context/AuthContext';
 import { useConfig } from '../../context/ConfigContext';
 import { getImageUrl } from '../../services/imageUrl';
 import styles from './AuthPages.module.css';
+import { maskTelefone, unmaskTelefone } from '../../services/maskUtils';
 
 export function Login() {
   const { login, loading } = useAuth();
   const { config, bustImageUrl } = useConfig();
   const navigate = useNavigate();
   const [erro, setErro] = useState('');
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
     setErro('');
+    const telefoneLimpo = unmaskTelefone(data.telefone);
     try {
-      const res = await login(data.telefone, data.senha);
+      const res = await login(telefoneLimpo, data.senha);
       if (res.usuario.tipo === 'dona') {
         if (res.usuario.precisa_alterar_acesso) {
           navigate('/garagem-frango-a9x7-controle/primeiro-acesso');
@@ -55,7 +57,12 @@ export function Login() {
             <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
               <div className={styles.field}>
                 <label>Telefone</label>
-                <input className="input-field" placeholder="16999999999" {...register('telefone', { required: 'Obrigatório' })} />
+                <input 
+                  className="input-field" 
+                  placeholder="(16) 99999-9999" 
+                  {...register('telefone', { required: 'Obrigatório' })} 
+                  onChange={(e) => setValue('telefone', maskTelefone(e.target.value))}
+                />
                 {errors.telefone && <span className={styles.err}>{errors.telefone.message}</span>}
               </div>
               <div className={styles.field}>
