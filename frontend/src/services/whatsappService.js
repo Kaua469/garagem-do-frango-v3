@@ -82,13 +82,29 @@ export async function enviarWhatsAppAutomatico(pedido, nomeLoja = 'Garagem do Fr
   if (!fone) return false;
   if (!fone.startsWith('55')) fone = '55' + fone;
 
-  const mensagem = montarMensagem(pedido, nomeLoja).normalize('NFC');
+  // Monta a mensagem base
+  const mensagemPura = montarMensagem(pedido, nomeLoja);
+
+  // Técnica de escape manual: transforma emojis em sequências que a API entende sem erro de encoding
+  const mensagemEscapada = mensagemPura.split('').map(char => {
+    const code = char.charCodeAt(0);
+    // Se for um caractere "normal" (ASCII), mantém. Se for especial ou emoji, escapa.
+    return code > 127 ? `\\u${code.toString(16).toUpperCase().padStart(4, '0')}` : char;
+  }).join('');
 
   try {
     const { data } = await axios.post(
       `https://api.z-api.io/instances/${instance}/token/${token}/send-text`,
-      { phone: fone, message: mensagem },
-      { headers: { 'Content-Type': 'application/json' } }
+      { 
+        phone: fone, 
+        message: mensagemPura // Vamos tentar enviar a pura mas com o header forçado primeiro
+      },
+      { 
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          'Accept': 'application/json'
+        } 
+      }
     );
     return !!data;
   } catch (err) {
