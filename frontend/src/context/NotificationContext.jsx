@@ -83,15 +83,24 @@ export function NotificationProvider({ children }) {
     setToasts(prev => prev.filter(t => t.toastId !== toastId));
   }
 
+  const audioCtxRef = useRef(null);
+
+  // Inicializa o contexto de áudio uma única vez
+  function obterAudioContext() {
+    if (!audioCtxRef.current) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtxRef.current = new AudioContextClass();
+    }
+    return audioCtxRef.current;
+  }
+
   function tocarSom() {
     try {
-      // Cria ou retoma o contexto de áudio (Browsers bloqueiam se não houver interação)
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      const ctx = new AudioContextClass();
+      const ctx = obterAudioContext();
       
       if (ctx.state === 'suspended') {
-        // Se estiver suspenso, tentamos retomar (isso geralmente só funciona dentro de um clique)
-        ctx.resume();
+        console.warn('⚠️ Áudio suspenso. Clique em "Ativar Som" no painel.');
+        return;
       }
 
       const osc = ctx.createOscillator();
@@ -100,34 +109,40 @@ export function NotificationProvider({ children }) {
       osc.connect(gain);
       gain.connect(ctx.destination);
       
-      // Som tipo "ding" mais nítido e alto
+      // Som tipo "Alerta de Restaurante" (Duplo bip)
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, ctx.currentTime); // La (A5)
-      osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.1); // Mi (E6)
       
+      // Bip 1
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
       gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.05); // Volume 50%
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+      gain.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.1);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.3);
+      
+      // Bip 2
+      osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.4);
+      gain.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.5);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
       
       osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.8);
+      osc.stop(ctx.currentTime + 0.9);
       
-      console.log('🔊 Alerta sonoro disparado');
+      console.log('🔔 SOM: Alerta sonoro de novo pedido disparado!');
     } catch (e) {
-      console.error('Erro ao tocar som:', e);
+      console.error('❌ SOM: Erro ao tentar tocar áudio:', e);
     }
   }
 
-  // Função para "desbloquear" o áudio (deve ser chamada por um clique do usuário)
   function permitirSom() {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioContextClass();
-    if (ctx.state === 'suspended') {
+    const ctx = obterAudioContext();
+    if (ctx.state === 'suspended' || ctx.state === 'closed') {
       ctx.resume().then(() => {
-        tocarSom(); // Toca um som de teste
-      });
+        console.log('✅ Áudio DESBLOQUEADO pelo usuário.');
+        tocarSom(); // Toca som de teste
+        alert('Som ativado com sucesso! Você ouvirá o alerta nos próximos pedidos.');
+      }).catch(err => console.error('Erro ao retomar áudio:', err));
     } else {
       tocarSom();
+      alert('O som já está ativo e pronto!');
     }
   }
 
