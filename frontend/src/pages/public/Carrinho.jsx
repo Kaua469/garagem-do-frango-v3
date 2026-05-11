@@ -184,83 +184,96 @@ export default function Carrinho() {
                 </div>
               </div>
 
-              {/* Formulário de entrega */}
-              <form onSubmit={handleSubmit(onFinalizar)} className={styles.form}>
-                <h3 className={styles.formTitle}>Dados de Entrega</h3>
+              {/* Formulário de entrega ou Prompt de Login */}
+              {usuario ? (
+                <form onSubmit={handleSubmit(onFinalizar)} className={styles.form}>
+                  <h3 className={styles.formTitle}>Dados de Entrega</h3>
 
-                <div className={styles.field}>
-                  <label>Nome completo *</label>
-                  <input className="input-field" {...register('nome_cliente', { required: 'Obrigatório' })} placeholder="Seu nome" />
-                  {errors.nome_cliente && <span className={styles.error}>{errors.nome_cliente.message}</span>}
-                </div>
-
-                <div className={styles.field}>
-                  <label>Telefone *</label>
-                  <input className="input-field" {...register('telefone_cliente', { required: 'Obrigatório' })} placeholder="(16) 99999-9999" />
-                  {errors.telefone_cliente && <span className={styles.error}>{errors.telefone_cliente.message}</span>}
-                </div>
-
-                <div className={styles.field}>
-                  <label>Endereço completo *</label>
-                  <textarea
-                    className="input-field"
-                    rows={3}
-                    {...register('endereco_entrega', { required: 'Obrigatório' })}
-                    placeholder="Rua, número, bairro, complemento..."
-                  />
-                  {errors.endereco_entrega && <span className={styles.error}>{errors.endereco_entrega.message}</span>}
-                </div>
-
-                <div className={styles.field}>
-                  <label>Forma de pagamento *</label>
-                  <select className="input-field" {...register('forma_pagamento', { required: 'Obrigatório' })}>
-                    <option value="">Selecione...</option>
-                    <option value="pix">⚡ Pix</option>
-                    <option value="dinheiro">💵 Dinheiro</option>
-                    <option value="cartao">💳 Cartão</option>
-                  </select>
-                  {errors.forma_pagamento && <span className={styles.error}>{errors.forma_pagamento.message}</span>}
-                </div>
-
-                {formaPagamento === 'cartao' && (
                   <div className={styles.field}>
-                    <label>Tipo do cartão *</label>
-                    <select className="input-field" {...register('tipo_cartao', { required: 'Obrigatório' })}>
+                    <label>Nome completo *</label>
+                    <input className="input-field" {...register('nome_cliente', { required: 'Obrigatório' })} placeholder="Seu nome" />
+                    {errors.nome_cliente && <span className={styles.error}>{errors.nome_cliente.message}</span>}
+                  </div>
+
+                  <div className={styles.field}>
+                    <label>Telefone *</label>
+                    <input className="input-field" {...register('telefone_cliente', { required: 'Obrigatório' })} placeholder="(16) 99999-9999" />
+                    {errors.telefone_cliente && <span className={styles.error}>{errors.telefone_cliente.message}</span>}
+                  </div>
+
+                  <div className={styles.field}>
+                    <label>Endereço completo *</label>
+                    <textarea
+                      className="input-field"
+                      rows={3}
+                      {...register('endereco_entrega', { required: 'Obrigatório' })}
+                      placeholder="Rua, número, bairro, complemento..."
+                    />
+                    {errors.endereco_entrega && <span className={styles.error}>{errors.endereco_entrega.message}</span>}
+                  </div>
+
+                  <div className={styles.field}>
+                    <label>Forma de pagamento *</label>
+                    <select className="input-field" {...register('forma_pagamento', { required: 'Obrigatório' })}>
                       <option value="">Selecione...</option>
-                      <option value="credito">Crédito</option>
-                      <option value="debito">Débito</option>
+                      <option value="pix">⚡ Pix</option>
+                      <option value="dinheiro">💵 Dinheiro</option>
+                      <option value="cartao">💳 Cartão</option>
                     </select>
-                    {errors.tipo_cartao && <span className={styles.error}>{errors.tipo_cartao.message}</span>}
+                    {errors.forma_pagamento && <span className={styles.error}>{errors.forma_pagamento.message}</span>}
                   </div>
-                )}
 
-                {formaPagamento === 'dinheiro' && (
+                  {formaPagamento === 'cartao' && (
+                    <div className={styles.field}>
+                      <label>Tipo do cartão *</label>
+                      <select className="input-field" {...register('tipo_cartao', { required: 'Obrigatório' })}>
+                        <option value="">Selecione...</option>
+                        <option value="credito">Crédito</option>
+                        <option value="debito">Débito</option>
+                      </select>
+                      {errors.tipo_cartao && <span className={styles.error}>{errors.tipo_cartao.message}</span>}
+                    </div>
+                  )}
+
+                  {formaPagamento === 'dinheiro' && (
+                    <div className={styles.field}>
+                      <label>Troco para</label>
+                      <input className="input-field" type="number" step="0.01" {...register('troco')} placeholder="R$ 0,00" />
+                    </div>
+                  )}
+
                   <div className={styles.field}>
-                    <label>Troco para</label>
-                    <input className="input-field" type="number" step="0.01" {...register('troco')} placeholder="R$ 0,00" />
+                    <label>Observações (opcional)</label>
+                    <textarea className="input-field" rows={2} {...register('observacao')} placeholder="Alguma observação sobre o pedido?" />
                   </div>
-                )}
 
-                <div className={styles.field}>
-                  <label>Observações (opcional)</label>
-                  <textarea className="input-field" rows={2} {...register('observacao')} placeholder="Alguma observação sobre o pedido?" />
-                </div>
-
-                {/* Total sticky no mobile */}
-                <div className={styles.totalSticky}>
-                  <div className={styles.totalStickyInfo}>
-                    <span>Total a pagar</span>
-                    <strong>R$ {(subtotal + taxaEntrega).toFixed(2)}</strong>
+                  {/* Total sticky no mobile */}
+                  <div className={styles.totalSticky}>
+                    <div className={styles.totalStickyInfo}>
+                      <span>Total a pagar</span>
+                      <strong>R$ {(subtotal + taxaEntrega).toFixed(2)}</strong>
+                    </div>
+                    <button
+                      type="submit"
+                      className={styles.finalizarBtn}
+                      disabled={loading}
+                    >
+                      {loading ? 'Finalizando...' : '✅ Finalizar Pedido'}
+                    </button>
                   </div>
-                  <button
-                    type="submit"
-                    className={styles.finalizarBtn}
-                    disabled={loading}
-                  >
-                    {loading ? 'Finalizando...' : '✅ Finalizar Pedido'}
-                  </button>
+                </form>
+              ) : (
+                <div className={styles.authPrompt}>
+                  <div className={styles.authIcon}>🔒</div>
+                  <h3>Falta pouco!</h3>
+                  <p>Para sua segurança e melhor controle do seu pedido, é necessário estar logado.</p>
+                  
+                  <div className={styles.authBtns}>
+                    <Link to="/login" className="btn-primary">Fazer Login</Link>
+                    <Link to="/cadastro" className="btn-outline">Criar uma Conta</Link>
+                  </div>
                 </div>
-              </form>
+              )}
             </div>
 
           </div>
