@@ -1,15 +1,25 @@
 import { Link } from 'react-router-dom';
 import { useConfig } from '../../context/ConfigContext';
+import { getImageUrl } from '../../services/imageUrl';
 import styles from './Footer.module.css';
 
 export default function Footer() {
-  const { config } = useConfig();
+  const { config, bustImageUrl } = useConfig();
+
+  const logoSrc = config.logo_url ? bustImageUrl(getImageUrl(config.logo_url)) : '/logo.png';
 
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.inner}`}>
         <div className={styles.col}>
-          <img src="/logo.png" alt={config.nome_loja} className={styles.logo} />
+          <Link to="/inicio">
+            <img 
+              src={logoSrc} 
+              alt={config.nome_loja} 
+              className={styles.logo} 
+              onError={e => { e.target.src = '/logo.png'; }}
+            />
+          </Link>
           <p className={styles.tagline}>O frango mais gostoso da cidade, feito com amor e tradição.</p>
         </div>
 
@@ -21,10 +31,9 @@ export default function Footer() {
 
         <div className={styles.col}>
           <h4 className={styles.colTitle}>Contato</h4>
-          <a href={`tel:${config.telefone}`} className={styles.link}>📞 {config.telefone}</a>
-          <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noreferrer" className={styles.link}>💬 WhatsApp</a>
-          <a href={`https://instagram.com/${config.instagram}`} target="_blank" rel="noreferrer" className={styles.link}>📸 @{config.instagram}</a>
-          <a href={`https://facebook.com/${config.facebook}`} target="_blank" rel="noreferrer" className={styles.link}>👍 Facebook</a>
+          <a href={`tel:${config.telefone}`} className={styles.link}><span>📞</span> {config.telefone}</a>
+          <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noreferrer" className={styles.link}><span>💬</span> WhatsApp</a>
+          <a href={`https://instagram.com/${config.instagram}`} target="_blank" rel="noreferrer" className={styles.link}><span>📸</span> @{config.instagram}</a>
         </div>
 
         <div className={styles.col}>
