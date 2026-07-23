@@ -336,7 +336,7 @@ router.patch('/:id/status', adminMiddleware, async (req, res) => {
     // Envia os dados para o n8n
     try {
       const respostaWebhook = await fetch(
-        'https://n8n.kadrontech.com.br/webhook-test/garagem-status-pedido',
+        'https://n8n.kadrontech.com.br/webhook/garagem-status-pedido',
         {
           method: 'POST',
           headers: {
